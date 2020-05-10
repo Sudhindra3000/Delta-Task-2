@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/gameBackLight"
+    tools:context=".MenuActivity">
+
+    <Button
+        android:id="@+id/btMultiplayer"
+        android:layout_width="260dp"
+        android:layout_height="130dp"
+        android:layout_marginBottom="164dp"
+        android:backgroundTint="@color/luigiGreen"
+        android:elevation="2dp"
+        android:fontFamily="@font/bangers"
+        android:includeFontPadding="false"
+        android:onClick="openNOPDialog"
+        android:text="Multiplayer"
+        android:textColor="@android:color/white"
+        android:textSize="46sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+        android:id="@+id/ivTitleMenu"
+        android:layout_width="373dp"
+        android:layout_height="191dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:transitionName="gameTitle"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.27"
+        app:srcCompat="@drawable/title" />
+
+    <ImageView
+        android:id="@+id/helpButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:clickable="true"
+        android:onClick="showHelp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/help_button" />
+
+    <ImageView
+        android:id="@+id/settingsButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:onClick="showSettings"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/settings_button" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

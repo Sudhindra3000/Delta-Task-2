@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Dots and Boxes</string>
+    <string-array name="numOfPlayers">
+        <item>Two</item>
+        <item>Three</item>
+        <item>Four</item>
+        <item>Five</item>
+        <item>Six</item>
+    </string-array>
+    <string name="htp1">Players take turns joining two horizontally or vertically adjacent dots by a line. Join two dots by touching between them.</string>
+    <string name="htp2">A player that completes the fourth side of a 1×1 box, occupies that box and takes another turn.</string>
+    <string name="htp3">When all the boxes have been occupied, the game ends and the player who has the most number of boxes wins.</string>
+</resources>
