@@ -10,11 +10,11 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.media.AudioAttributes;
-import android.media.SoundPool;
+import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.util.Log;
@@ -28,7 +28,7 @@ import com.example.deltatask2.databinding.ActivityGameBinding;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class GameActivity extends AppCompatActivity {
+public class GameActivity extends AppCompatActivity implements MediaPlayer.OnCompletionListener {
 
     ActivityGameBinding binding;
     private int n, s, currentPlayer = 0;
@@ -40,8 +40,8 @@ public class GameActivity extends AppCompatActivity {
     private ArrayList<Bitmap> playerBitmaps, borderBitmaps;
     private ArrayList<Result> results;
     private Vibrator vibrator;
-    private SoundPool soundPool;
-    private int bt_click_1, wet_click, applause;
+    private MediaPlayer mediaPlayer;
+    private long lastClickTime = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +63,6 @@ public class GameActivity extends AppCompatActivity {
         n = getIntent().getIntExtra("n", 2);
         s = getIntent().getIntExtra("s", 6);
 
-        setupSounds();
         setupIcons();
         setupColors();
         binding.gameCanvas.setGridSize(s);
@@ -72,12 +71,16 @@ public class GameActivity extends AppCompatActivity {
         scores = new int[n];
         binding.gameCanvas.setListener(new GameCanvas.CanvasListener() {
             @Override
+            public void onGridEmpty() {
+                binding.btUndo.setVisibility(View.INVISIBLE);
+            }
+
+            @Override
             public void onPlayerChanged(int index) {
-                soundPool.play(wet_click, 1, 1, 0, 0, 1);
+                playSoundInMedia(R.raw.wet_click);
                 currentPlayer = index;
                 binding.scoreBoard.setCurrentPlayer(index);
                 squareAdded = false;
-                Log.i(TAG, "onPlayerChanged: currentPlayer=" + index);
                 binding.btUndo.setVisibility(View.VISIBLE);
             }
 
@@ -87,7 +90,6 @@ public class GameActivity extends AppCompatActivity {
                 scores[player]++;
                 binding.scoreBoard.setScores(scores);
                 squareAdded = true;
-                Log.i(TAG, "onSquareAdded: squareAdded");
                 binding.btUndo.setVisibility(View.VISIBLE);
                 two = binding.gameCanvas.two;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
@@ -104,21 +106,6 @@ public class GameActivity extends AppCompatActivity {
                 showResults();
             }
         });
-    }
-
-    private void setupSounds() {
-        AudioAttributes audioAttributes = new AudioAttributes.Builder()
-                .setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION)
-                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                .build();
-        soundPool = new SoundPool.Builder()
-                .setMaxStreams(1)
-                .setAudioAttributes(audioAttributes)
-                .build();
-
-        bt_click_1 = soundPool.load(this, R.raw.bt_click_1, 1);
-        wet_click = soundPool.load(this, R.raw.wet_click, 1);
-        applause = soundPool.load(this, R.raw.applause, 1);
     }
 
     private void setupIcons() {
@@ -149,17 +136,21 @@ public class GameActivity extends AppCompatActivity {
     }
 
     public void cancel(View view) {
+        if (SystemClock.elapsedRealtime() - lastClickTime < 400)
+            return;
+        lastClickTime = SystemClock.elapsedRealtime();
         final QuitDialog quitDialog = new QuitDialog();
+        playSoundInMedia(R.raw.cancel_game_sound);
         quitDialog.setListener(new QuitDialog.quitDialogListener() {
             @Override
             public void onYesClicked() {
-                soundPool.play(bt_click_1, 1, 1, 0, 0, 1);
+                playSoundInMedia(R.raw.tic_tock_click);
                 startActivity(new Intent(GameActivity.this, MenuActivity.class));
             }
 
             @Override
             public void onNoClicked() {
-                soundPool.play(bt_click_1, 1, 1, 0, 0, 1);
+                playSoundInMedia(R.raw.tic_tock_click);
                 quitDialog.dismiss();
             }
         });
@@ -167,18 +158,22 @@ public class GameActivity extends AppCompatActivity {
     }
 
     public void undo(View view) {
-        soundPool.play(bt_click_1, 1, 1, 0, 0, 1);
-        binding.btUndo.setVisibility(View.INVISIBLE);
-        if (squareAdded) {
-            Log.i(TAG, "undo: scores[currentPlayer]=" + scores[currentPlayer]);
-            if (two)
-                scores[currentPlayer] = scores[currentPlayer] - 2;
-            else
-                scores[currentPlayer]--;
-            Log.i(TAG, "undo: scores[currentPlayer]=" + scores[currentPlayer]);
+        if (SystemClock.elapsedRealtime() - lastClickTime < 300)
+            return;
+        lastClickTime = SystemClock.elapsedRealtime();
+        playSoundInMedia(R.raw.bt_click_1);
+        ArrayList<Integer> decreasingIndices = binding.gameCanvas.undo2();
+        for (Integer integer : decreasingIndices) {
+            scores[integer]--;
         }
-        binding.scoreBoard.undo(squareAdded, two);
-        binding.gameCanvas.undo(squareAdded);
+        binding.scoreBoard.setScores(scores);
+        if (squareAdded)
+            if (binding.gameCanvas.getCurrentPlayer() == 0)
+                binding.scoreBoard.setCurrentPlayer(n - 1);
+            else
+                binding.scoreBoard.setCurrentPlayer(binding.gameCanvas.getCurrentPlayer() - 1);
+        else
+            binding.scoreBoard.setCurrentPlayer(binding.gameCanvas.getCurrentPlayer());
     }
 
     public static Bitmap getBitmapFromVectorDrawable(Context context, int drawableId) {
@@ -204,7 +199,7 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private void showResults() {
-        soundPool.play(applause, 1, 1, 0, 0, 1);
+        playSoundInMedia(R.raw.applause);
         results = new ArrayList<>();
         setupImageId();
         for (int i = 0; i < n; i++)
@@ -236,10 +231,17 @@ public class GameActivity extends AppCompatActivity {
         cancel(binding.btCancel);
     }
 
+    private void playSoundInMedia(int resID) {
+        mediaPlayer = MediaPlayer.create(GameActivity.this, resID);
+        mediaPlayer.start();
+        mediaPlayer.setOnCompletionListener(this);
+    }
+
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        soundPool.release();
-        soundPool = null;
+    public void onCompletion(MediaPlayer mp) {
+        if (mp != null) {
+            mp.release();
+            mp = null;
+        }
     }
 }

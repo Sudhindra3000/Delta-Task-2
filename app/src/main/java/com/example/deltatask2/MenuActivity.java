@@ -5,22 +5,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.animation.Animator;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.media.AudioAttributes;
-import android.media.SoundPool;
+import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.os.Handler;
-import android.util.Log;
+import android.os.SystemClock;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Toast;
 
 import com.example.deltatask2.databinding.ActivityMenuBinding;
 
-public class MenuActivity extends AppCompatActivity {
+public class MenuActivity extends AppCompatActivity implements MediaPlayer.OnCompletionListener {
 
     private static final String TAG = "MenuActivity";
     private ActivityMenuBinding binding;
@@ -28,8 +23,8 @@ public class MenuActivity extends AppCompatActivity {
     private int n = 2, s;
     private SharedPreferences sharedPreferences;
     private SettingsDialog settingsDialog;
-    private SoundPool soundPool;
-    private int bt_click_1, menu_click, tick_tok_click;
+    private MediaPlayer mediaPlayer;
+    private long lastClickTime=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,8 +51,6 @@ public class MenuActivity extends AppCompatActivity {
         multAnim = AnimationUtils.loadAnimation(this, R.anim.mult_anim_2);
         binding.btMultiplayer.setAnimation(multAnim);
 
-        setupSounds();
-
         binding.helpButton.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
             public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
@@ -73,35 +66,22 @@ public class MenuActivity extends AppCompatActivity {
         });
     }
 
-    private void setupSounds() {
-        AudioAttributes audioAttributes = new AudioAttributes.Builder()
-                .setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION)
-                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                .build();
-        soundPool = new SoundPool.Builder()
-                .setMaxStreams(1)
-                .setAudioAttributes(audioAttributes)
-                .build();
-
-        bt_click_1 = soundPool.load(this, R.raw.bt_click_1, 1);
-        menu_click = soundPool.load(this, R.raw.menu_click, 1);
-        tick_tok_click = soundPool.load(this, R.raw.tic_tock_click, 1);
-    }
-
-
     public void showHelp(View view) {
-        soundPool.play(menu_click, 1, 1, 0, 0, 1);
+        playSoundInMedia(R.raw.menu_click);
         Intent intent = new Intent(MenuActivity.this, HelpActivity.class);
         startActivity(intent);
     }
 
     public void showSettings(View view) {
-        soundPool.play(menu_click, 1, 1, 0, 0, 1);
+        if (SystemClock.elapsedRealtime()-lastClickTime<800)
+            return;
+        lastClickTime=SystemClock.elapsedRealtime();
+        playSoundInMedia(R.raw.menu_click);
         settingsDialog.s = s;
         settingsDialog.setListener(new SettingsDialog.SettingsListener() {
             @Override
             public void gridSizeSelected(int tag) {
-                soundPool.play(tick_tok_click, 1, 1, 0, 0, 1);
+                playSoundInMedia(R.raw.tic_tock_click);
                 s = tag;
                 sharedPreferences.edit().putInt("s", s).apply();
             }
@@ -110,8 +90,11 @@ public class MenuActivity extends AppCompatActivity {
     }
 
     public void openNOPDialog(View view) {
-        soundPool.play(bt_click_1, 1, 1, 0, 0, 1);
-        NumOfPlayersDialog dialog = new NumOfPlayersDialog();
+        if (SystemClock.elapsedRealtime()-lastClickTime<800)
+            return;
+        lastClickTime=SystemClock.elapsedRealtime();
+        playSoundInMedia(R.raw.bt_click_1);
+        final NumOfPlayersDialog dialog = new NumOfPlayersDialog();
         dialog.setListener(new NumOfPlayersDialog.Listener() {
             @Override
             public void onNSelected(int nop) {
@@ -120,7 +103,8 @@ public class MenuActivity extends AppCompatActivity {
 
             @Override
             public void ok() {
-                soundPool.play(tick_tok_click, 1, 1, 0, 0, 1);
+                playSoundInMedia(R.raw.tic_tock_click);
+                dialog.dismiss();
                 startGame();
             }
         });
@@ -160,10 +144,17 @@ public class MenuActivity extends AppCompatActivity {
         finishAffinity();
     }
 
+    private void playSoundInMedia(int resID) {
+        mediaPlayer = MediaPlayer.create(MenuActivity.this, resID);
+        mediaPlayer.start();
+        mediaPlayer.setOnCompletionListener(this);
+    }
+
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        soundPool.release();
-        soundPool = null;
+    public void onCompletion(MediaPlayer mp) {
+        if (mp != null) {
+            mp.release();
+            mp = null;
+        }
     }
 }

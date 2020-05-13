@@ -96,6 +96,7 @@ public class ScoreBoard extends View {
             currentPlayer = index + 1;
         else
             currentPlayer = 0;
+        Log.i(TAG, "setCurrentPlayer: currentPlayer="+currentPlayer);
         postInvalidate();
     }
 
@@ -115,23 +116,5 @@ public class ScoreBoard extends View {
         borderRectF = rectFS.get(currentPlayer);
         borderRectF.set(borderRectF.left, borderRectF.top, borderRectF.right, borderRectF.bottom);
         canvas.drawBitmap(borderBitmaps.get(currentPlayer), null, borderRectF, null);
-    }
-
-    public void undo(boolean squareAdded, boolean two) {
-        if (squareAdded) {
-            if (two)
-                scores.set(currentPlayer, scores.get(currentPlayer) - 2);
-            else
-                scores.set(currentPlayer, scores.get(currentPlayer) - 1);
-        } else
-            previousPlayer();
-        postInvalidate();
-    }
-
-    private void previousPlayer() {
-        if (currentPlayer != 0)
-            currentPlayer--;
-        else
-            currentPlayer = nP - 1;
     }
 }

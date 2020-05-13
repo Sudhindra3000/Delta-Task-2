@@ -9,6 +9,7 @@ public class Line {
 
     float startX, startY, stopX, stopY;
     private int orientation;
+    public int playerIndex;
     Paint paint;
 
     public Line() {
@@ -47,7 +48,6 @@ public class Line {
         if (this == o) return true;
         if (!(o instanceof Line)) return false;
         Line line = (Line) o;
-//        if (line.getOrientation()!=orientation) return true;
         return (Float.compare(line.startX, startX) == 0 &&
                 Float.compare(line.startY, startY) == 0 &&
                 Float.compare(line.stopX, stopX) == 0 &&

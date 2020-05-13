@@ -22,7 +22,7 @@ public class GameCanvas extends View {
     private int oS, nS, a;
     private float rC, wL;
     private double oX, oY, x, y, rx, ry, rxS, ryS, X, Y;
-    private boolean squareAdded = false, isMoving = false;
+    private boolean squareAdded = false;
     private int[] scores;
     private Paint paintGrid, paintLine;
     private Point[][] gridPattern;
@@ -57,6 +57,8 @@ public class GameCanvas extends View {
     }
 
     public interface CanvasListener {
+        void onGridEmpty();
+
         void onPlayerChanged(int index);
 
         void onSquareAdded(int player);
@@ -115,6 +117,8 @@ public class GameCanvas extends View {
         }
         if (squares.size() == maxSquares)
             listener.onGridCompleted();
+        if (lines.size() == 0)
+            listener.onGridEmpty();
     }
 
     @Override
@@ -129,64 +133,58 @@ public class GameCanvas extends View {
         ryS = Math.floor(ry);
         X = rx - rxS;
         Y = ry - ryS;
-//        if (event.getAction() == MotionEvent.ACTION_MOVE) {
-//            isMoving = true;
-//            return false;
-//        }
         if (event.getAction() == MotionEvent.ACTION_UP) {
-//            if (isMoving)
-//                isMoving = false;
-//            else {
-                line = new Line(paintLine);
-                if (rxS < 5 && ryS < 5) {
-                    if (X >= Y) {
-                        if (X + Y >= 1) {  //RIGHT
-                            line.startX = (float) ((rxS + 1) * a);
-                            line.startY = (float) (ryS * a);
-                            line.stopX = (float) ((rxS + 1) * a);
-                            line.stopY = (float) ((ryS + 1) * a);
-                            line.setOrientation(VERTICAL);
-                        } else if (X + Y < 1) {  //BOTTOM
-                            line.startX = (float) (rxS * a);
-                            line.startY = (float) (ryS * a);
-                            line.stopX = (float) ((rxS + 1) * a);
-                            line.stopY = (float) (ryS * a);
-                            line.setOrientation(HORIZONTAL);
-                        }
-                    } else if (X < Y) {
-                        if (X + Y >= 1) {  //TOP
-                            line.startX = (float) (rxS * a);
-                            line.startY = (float) ((ryS + 1) * a);
-                            line.stopX = (float) ((rxS + 1) * a);
-                            line.stopY = (float) ((ryS + 1) * a);
-                            line.setOrientation(HORIZONTAL);
-                        } else if (X + Y < 1) {  //LEFT
-                            line.startX = (float) (rxS * a);
-                            line.startY = (float) (ryS * a);
-                            line.stopX = (float) (rxS * a);
-                            line.stopY = (float) ((ryS + 1) * a);
-                            line.setOrientation(VERTICAL);
-                        }
+            line = new Line(paintLine);
+            if (rxS < 5 && ryS < 5) {
+                if (X >= Y) {
+                    if (X + Y >= 1) {  //RIGHT
+                        line.startX = (float) ((rxS + 1) * a);
+                        line.startY = (float) (ryS * a);
+                        line.stopX = (float) ((rxS + 1) * a);
+                        line.stopY = (float) ((ryS + 1) * a);
+                        line.setOrientation(VERTICAL);
+                    } else if (X + Y < 1) {  //BOTTOM
+                        line.startX = (float) (rxS * a);
+                        line.startY = (float) (ryS * a);
+                        line.stopX = (float) ((rxS + 1) * a);
+                        line.stopY = (float) (ryS * a);
+                        line.setOrientation(HORIZONTAL);
                     }
-                    boolean found = false;
-                    for (Line line1 : lines) {
-                        if (line.equals(line1)) {
-                            found = true;
-                            break;
-                        }
-                    }
-                    if (!found) {
-                        if (!squareAdded)
-                            nextPlayer();
-                        line.setColor(colors[currentPlayer]);
-                        lines.add(line);
-                        checkForSquare(line);
-                        if (!squareAdded)
-                            listener.onPlayerChanged(currentPlayer);
-                        postInvalidate();
-                        return true;
+                } else if (X < Y) {
+                    if (X + Y >= 1) {  //TOP
+                        line.startX = (float) (rxS * a);
+                        line.startY = (float) ((ryS + 1) * a);
+                        line.stopX = (float) ((rxS + 1) * a);
+                        line.stopY = (float) ((ryS + 1) * a);
+                        line.setOrientation(HORIZONTAL);
+                    } else if (X + Y < 1) {  //LEFT
+                        line.startX = (float) (rxS * a);
+                        line.startY = (float) (ryS * a);
+                        line.stopX = (float) (rxS * a);
+                        line.stopY = (float) ((ryS + 1) * a);
+                        line.setOrientation(VERTICAL);
                     }
                 }
+                boolean found = false;
+                for (Line line1 : lines) {
+                    if (line.equals(line1)) {
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    if (!squareAdded)
+                        nextPlayer();
+                    line.playerIndex=currentPlayer;
+                    line.setColor(colors[currentPlayer]);
+                    lines.add(line);
+                    checkForSquare(line);
+                    if (!squareAdded)
+                        listener.onPlayerChanged(currentPlayer);
+                    postInvalidate();
+                    return true;
+                }
+            }
 //            }
         }
         return true;
@@ -222,6 +220,7 @@ public class GameCanvas extends View {
             }
             if (exists1) {
                 s1 = new Square(startX + rC + wL, startY - a + rC + wL, stopX + rC - wL, startY + rC - wL, colors[currentPlayer]);
+                s1.lineIndex = lines.indexOf(line);
                 squares.add(s1);
             }
             for (Line line1 : lines) {
@@ -243,6 +242,7 @@ public class GameCanvas extends View {
             }
             if (exists2) {
                 s2 = new Square(startX + rC + wL, startY + rC + wL, stopX + rC - wL, startY + a + rC - wL, colors[currentPlayer]);
+                s2.lineIndex = lines.indexOf(line);
                 squares.add(s2);
             }
         } else {
@@ -272,6 +272,7 @@ public class GameCanvas extends View {
             }
             if (exists1) {
                 s1 = new Square(startX - a + rC + wL, startY + rC + wL, startX + rC - wL, stopY + rC - wL, colors[currentPlayer]);
+                s1.lineIndex = lines.indexOf(line);
                 squares.add(s1);
             }
             for (Line line1 : lines) {
@@ -293,6 +294,7 @@ public class GameCanvas extends View {
             }
             if (exists2) {
                 s2 = new Square(startX + rC + wL, startY + rC + wL, startX + a + rC - wL, stopY + rC - wL, colors[currentPlayer]);
+                s2.lineIndex = lines.indexOf(line);
                 squares.add(s2);
             }
         }
@@ -323,14 +325,28 @@ public class GameCanvas extends View {
             currentPlayer = numOfPlayers - 1;
     }
 
-    public void undo(boolean squareAdded) {
-        lines.remove(lines.size() - 1);
-        if (squareAdded) {
-            squares.remove(squares.size() - 1);
-            if (two)
-                squares.remove(squares.size() - 1);
-        } else
+    public ArrayList<Integer> undo2() {
+        int lastLineIndex = lines.size() - 1;
+        ArrayList<Square> removingSquares = new ArrayList<>();
+        ArrayList<Integer> decreasingPlayerIndices = new ArrayList<>();
+        for (Square square : squares) {
+            if (square.lineIndex == lastLineIndex) {
+                removingSquares.add(square);
+                decreasingPlayerIndices.add(lines.get(lastLineIndex).playerIndex);
+            }
+        }
+        if (removingSquares.size()==0){
             previousPlayer();
+            Log.i(TAG, "undo2: previousPlayer");
+        }
+        squares.removeAll(removingSquares);
+        lines.remove(lines.size() - 1);
+        Log.i(TAG, "undo2: currentPlayer="+currentPlayer);
         postInvalidate();
+        return decreasingPlayerIndices;
+    }
+
+    public int getCurrentPlayer() {
+        return currentPlayer;
     }
 }

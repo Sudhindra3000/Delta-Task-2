@@ -8,6 +8,7 @@ public class Square {
 
     public RectF rectF;
     public Paint paint;
+    public int lineIndex;
 
     public Square(float left,float top,float right,float bottom,String color){
         rectF=new RectF();

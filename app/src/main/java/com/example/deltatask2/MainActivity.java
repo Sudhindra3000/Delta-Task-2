@@ -4,8 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityOptionsCompat;
 
 import android.content.Intent;
-import android.media.AudioAttributes;
-import android.media.SoundPool;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -13,12 +12,11 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MediaPlayer.OnCompletionListener {
 
     private Animation titleAnim;
     private ImageView imageView;
-    private SoundPool soundPool;
-    private int powerUpSound;
+    private MediaPlayer mediaPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,23 +31,10 @@ public class MainActivity extends AppCompatActivity {
                         | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                         | View.SYSTEM_UI_FLAG_FULLSCREEN);
 
-
-        AudioAttributes audioAttributes = new AudioAttributes.Builder()
-                .setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION)
-                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                .build();
-
-        soundPool = new SoundPool.Builder()
-                .setMaxStreams(1)
-                .setAudioAttributes(audioAttributes)
-                .build();
-
-        powerUpSound = soundPool.load(this, R.raw.power_up, 1);
-
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                soundPool.play(powerUpSound, 1, 1, 0, 0, 1);
+                playSoundInMedia(R.raw.power_up);
             }
         }, 100);
 
@@ -77,10 +62,17 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent, optionsCompat.toBundle());
     }
 
+    private void playSoundInMedia(int resID) {
+        mediaPlayer = MediaPlayer.create(MainActivity.this, resID);
+        mediaPlayer.start();
+        mediaPlayer.setOnCompletionListener(this);
+    }
+
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        soundPool.release();
-        soundPool = null;
+    public void onCompletion(MediaPlayer mp) {
+        if (mp != null) {
+            mp.release();
+            mp = null;
+        }
     }
 }

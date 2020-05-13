@@ -9,10 +9,8 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.media.AudioAttributes;
-import android.media.SoundPool;
+import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -22,15 +20,14 @@ import com.example.deltatask2.databinding.ActivityResultsBinding;
 
 import java.util.ArrayList;
 
-public class ResultsActivity extends AppCompatActivity {
+public class ResultsActivity extends AppCompatActivity implements MediaPlayer.OnCompletionListener {
 
     private static final String TAG = "ResultsActivity";
     ActivityResultsBinding binding;
     private ArrayList<Result> results;
     private ArrayList<ImageView> imageViews;
     private ArrayList<TextView> tvScores;
-    private SoundPool soundPool;
-    private int bt_click_1;
+    private MediaPlayer mediaPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +47,6 @@ public class ResultsActivity extends AppCompatActivity {
         int n = getIntent().getIntExtra("n", 0);
         results = getIntent().getParcelableArrayListExtra("sortedResults");
 
-        setupSound();
         setupLists();
 
         for (int i = 0; i < n; i++) {
@@ -60,19 +56,6 @@ public class ResultsActivity extends AppCompatActivity {
             tvScores.get(i).setTextColor(Color.parseColor(results.get(i).color));
             tvScores.get(i).setText(String.valueOf(results.get(i).score));
         }
-    }
-
-    private void setupSound() {
-        AudioAttributes audioAttributes = new AudioAttributes.Builder()
-                .setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION)
-                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                .build();
-        soundPool = new SoundPool.Builder()
-                .setMaxStreams(1)
-                .setAudioAttributes(audioAttributes)
-                .build();
-
-        bt_click_1 = soundPool.load(this, R.raw.bt_click_1, 1);
     }
 
     private void setupLists() {
@@ -104,7 +87,7 @@ public class ResultsActivity extends AppCompatActivity {
     }
 
     public void showMainMenu(View view) {
-        soundPool.play(bt_click_1, (float) 0.4, (float) 0.4, 0, 0, 1);
+        playSoundInMedia(R.raw.bt_click_1);
         startActivity(new Intent(ResultsActivity.this, MenuActivity.class));
     }
 
@@ -113,10 +96,17 @@ public class ResultsActivity extends AppCompatActivity {
         startActivity(new Intent(ResultsActivity.this, MenuActivity.class));
     }
 
+    private void playSoundInMedia(int resID) {
+        mediaPlayer = MediaPlayer.create(ResultsActivity.this, resID);
+        mediaPlayer.start();
+        mediaPlayer.setOnCompletionListener(this);
+    }
+
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        soundPool.release();
-        soundPool = null;
+    public void onCompletion(MediaPlayer mp) {
+        if (mp != null) {
+            mp.release();
+            mp = null;
+        }
     }
 }

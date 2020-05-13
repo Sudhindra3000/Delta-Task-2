@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,7 +17,6 @@ import java.util.ArrayList;
 
 public class SettingsDialog extends AppCompatDialogFragment{
 
-//    TextView textView;
     ArrayList<Button> buttons;
     ArrayList<ImageView> borders;
     ImageButton back;
