@@ -9,8 +9,34 @@
         <item name="android:windowFullscreen">true</item>
     </style>
 
-    <style name="TransparentDialogStyle" parent="ThemeOverlay.MaterialComponents.Dialog.Alert">
-        <item name="android:windowBackground">@android:color/transparent</item>
+    <style name="NOPDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:windowBackground">@drawable/popup_background</item>
+        <item name="android:windowAnimationStyle">@style/NOPDialogAnim</item>
+    </style>
+
+    <style name="NOPDialogAnim">
+        <item name="android:windowEnterAnimation">@anim/dialog_slide_in_right</item>
+        <item name="android:windowExitAnimation">@anim/dialog_slide_out_right</item>
+    </style>
+
+    <style name="SettingsDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:windowBackground">@drawable/popup_background</item>
+        <item name="android:windowAnimationStyle">@style/SettingsDialogAnim</item>
+    </style>
+
+    <style name="SettingsDialogAnim">
+        <item name="android:windowEnterAnimation">@anim/dialog_slide_in_left</item>
+        <item name="android:windowExitAnimation">@anim/dialog_slide_out_left</item>
+    </style>
+
+    <style name="QuitDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:windowBackground">@drawable/popup_background</item>
+        <item name="android:windowAnimationStyle">@style/QuitDialogAnim</item>
+    </style>
+
+    <style name="QuitDialogAnim">
+        <item name="android:windowEnterAnimation">@anim/dialog_slide_in_top</item>
+        <item name="android:windowExitAnimation">@anim/dialog_slide_out_top</item>
     </style>
 
 </resources>

@@ -25,7 +25,6 @@ public class NumOfPlayersDialog extends AppCompatDialogFragment {
     Button button;
     Spinner spinner;
     ArrayAdapter adapter;
-//    NopAdapter adapter;
     Listener listener;
 
     public void setListener(Listener listener) {
@@ -35,7 +34,7 @@ public class NumOfPlayersDialog extends AppCompatDialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        AlertDialog.Builder builder=new AlertDialog.Builder(getContext(),R.style.TransparentDialogStyle);
+        AlertDialog.Builder builder=new AlertDialog.Builder(getContext(),R.style.NOPDialog);
 
         View view=getActivity().getLayoutInflater().inflate(R.layout.num_of_players_dialog,null);
         builder.setView(view);

@@ -34,7 +34,7 @@ public class SettingsDialog extends AppCompatDialogFragment{
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        AlertDialog.Builder builder=new AlertDialog.Builder(getActivity(),R.style.TransparentDialogStyle);
+        AlertDialog.Builder builder=new AlertDialog.Builder(getActivity(),R.style.SettingsDialog);
 
         View view=getActivity().getLayoutInflater().inflate(R.layout.settings_dialog,null);
         builder.setView(view);

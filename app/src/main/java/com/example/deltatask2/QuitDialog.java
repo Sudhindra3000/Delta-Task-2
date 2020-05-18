@@ -28,7 +28,7 @@ public class QuitDialog extends AppCompatDialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        AlertDialog.Builder builder=new AlertDialog.Builder(getContext(),R.style.TransparentDialogStyle);
+        AlertDialog.Builder builder=new AlertDialog.Builder(getContext(),R.style.QuitDialog);
         View view=getActivity().getLayoutInflater().inflate(R.layout.quit_dialog,null);
         builder.setView(view);
 
