@@ -1,4 +1,4 @@
-package com.example.deltatask2;
+package com.example.deltatask2.CustomViews;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -10,6 +10,10 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import androidx.annotation.Nullable;
+
+import com.example.deltatask2.Utils.Line;
+import com.example.deltatask2.Utils.Point;
+import com.example.deltatask2.Utils.Square;
 
 import java.util.ArrayList;
 
@@ -106,7 +110,7 @@ public class GameCanvas extends View {
             canvas.drawRect(square.rectF, square.paint);
         }
         for (Line line : lines) {
-            canvas.drawLine(line.startX + rC, line.startY + rC, line.stopX + rC, line.stopY + rC, line.getPaint());
+            canvas.drawLine(line.getStartX() + rC, line.getStartY() + rC, line.getStopX() + rC, line.getStopY() + rC, line.getPaint());
         }
         Point point;
         for (int i = 0; i <= nLines; i++) {
@@ -138,30 +142,30 @@ public class GameCanvas extends View {
             if (rxS < 5 && ryS < 5) {
                 if (X >= Y) {
                     if (X + Y >= 1) {  //RIGHT
-                        line.startX = (float) ((rxS + 1) * a);
-                        line.startY = (float) (ryS * a);
-                        line.stopX = (float) ((rxS + 1) * a);
-                        line.stopY = (float) ((ryS + 1) * a);
+                        line.setStartX((float) ((rxS + 1) * a));
+                        line.setStartY((float) (ryS * a));
+                        line.setStopX((float) ((rxS + 1) * a));
+                        line.setStopY((float) ((ryS + 1) * a));
                         line.setOrientation(VERTICAL);
                     } else if (X + Y < 1) {  //BOTTOM
-                        line.startX = (float) (rxS * a);
-                        line.startY = (float) (ryS * a);
-                        line.stopX = (float) ((rxS + 1) * a);
-                        line.stopY = (float) (ryS * a);
+                        line.setStartX((float) (rxS * a));
+                        line.setStartY((float) (ryS * a));
+                        line.setStopX((float) ((rxS + 1) * a));
+                        line.setStopY((float) (ryS * a));
                         line.setOrientation(HORIZONTAL);
                     }
                 } else if (X < Y) {
                     if (X + Y >= 1) {  //TOP
-                        line.startX = (float) (rxS * a);
-                        line.startY = (float) ((ryS + 1) * a);
-                        line.stopX = (float) ((rxS + 1) * a);
-                        line.stopY = (float) ((ryS + 1) * a);
+                        line.setStartX((float) (rxS * a));
+                        line.setStartY((float) ((ryS + 1) * a));
+                        line.setStopX((float) ((rxS + 1) * a));
+                        line.setStopY((float) ((ryS + 1) * a));
                         line.setOrientation(HORIZONTAL);
                     } else if (X + Y < 1) {  //LEFT
-                        line.startX = (float) (rxS * a);
-                        line.startY = (float) (ryS * a);
-                        line.stopX = (float) (rxS * a);
-                        line.stopY = (float) ((ryS + 1) * a);
+                        line.setStartX((float) (rxS * a));
+                        line.setStartY((float) (ryS * a));
+                        line.setStopX((float) (rxS * a));
+                        line.setStopY((float) ((ryS + 1) * a));
                         line.setOrientation(VERTICAL);
                     }
                 }
@@ -193,7 +197,7 @@ public class GameCanvas extends View {
     private void checkForSquare(Line line) {
         Square s1, s2;
         boolean exists1 = false, exists2 = false;
-        float startX = line.startX, startY = line.startY, stopX = line.stopX, stopY = line.stopY;
+        float startX = line.getStartX(), startY = line.getStartY(), stopX = line.getStopX(), stopY = line.getStopY();
         if (line.getOrientation() == HORIZONTAL) {
             Line tL = new Line(startX, startY - a, startX, startY);
             Line tR = new Line(stopX, stopY - a, stopX, stopY);

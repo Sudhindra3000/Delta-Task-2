@@ -1,4 +1,4 @@
-package com.example.deltatask2;
+package com.example.deltatask2.Dialogs;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -13,6 +13,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
+import com.example.deltatask2.R;
+
 import java.util.ArrayList;
 
 public class SettingsDialog extends AppCompatDialogFragment{
@@ -20,11 +22,15 @@ public class SettingsDialog extends AppCompatDialogFragment{
     ArrayList<Button> buttons;
     ArrayList<ImageView> borders;
     ImageButton back;
-    int s;
+    private int s;
     private SettingsListener listener;
 
     public void setListener(SettingsListener listener) {
         this.listener = listener;
+    }
+
+    public void setS(int s) {
+        this.s = s;
     }
 
     public interface SettingsListener{
@@ -34,7 +40,7 @@ public class SettingsDialog extends AppCompatDialogFragment{
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        AlertDialog.Builder builder=new AlertDialog.Builder(getActivity(),R.style.SettingsDialog);
+        AlertDialog.Builder builder=new AlertDialog.Builder(getActivity(), R.style.SettingsDialog);
 
         View view=getActivity().getLayoutInflater().inflate(R.layout.settings_dialog,null);
         builder.setView(view);

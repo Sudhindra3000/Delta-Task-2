@@ -1,13 +1,13 @@
-package com.example.deltatask2;
+package com.example.deltatask2.Utils;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
 public class Result implements Parcelable{
 
-    int score;
-    String color;
-    int imageId;
+    private int score;
+    private String color;
+    private int imageId;
 
     public Result(int score, String color) {
         this.score = score;
@@ -18,6 +18,17 @@ public class Result implements Parcelable{
         this.imageId = imageId;
     }
 
+    public int getScore() {
+        return score;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public int getImageId() {
+        return imageId;
+    }
 
     protected Result(Parcel in) {
         score = in.readInt();

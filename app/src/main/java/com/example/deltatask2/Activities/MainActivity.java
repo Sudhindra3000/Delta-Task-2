@@ -1,4 +1,4 @@
-package com.example.deltatask2;
+package com.example.deltatask2.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityOptionsCompat;
@@ -11,6 +11,8 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+
+import com.example.deltatask2.R;
 
 public class MainActivity extends AppCompatActivity implements MediaPlayer.OnCompletionListener {
 

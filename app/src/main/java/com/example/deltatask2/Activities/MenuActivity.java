@@ -1,4 +1,4 @@
-package com.example.deltatask2;
+package com.example.deltatask2.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -13,6 +13,9 @@ import android.view.ViewAnimationUtils;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
+import com.example.deltatask2.Dialogs.NumOfPlayersDialog;
+import com.example.deltatask2.Dialogs.SettingsDialog;
+import com.example.deltatask2.R;
 import com.example.deltatask2.databinding.ActivityMenuBinding;
 
 public class MenuActivity extends AppCompatActivity implements MediaPlayer.OnCompletionListener {
@@ -77,7 +80,7 @@ public class MenuActivity extends AppCompatActivity implements MediaPlayer.OnCom
             return;
         lastClickTime=SystemClock.elapsedRealtime();
         playSoundInMedia(R.raw.menu_click);
-        settingsDialog.s = s;
+        settingsDialog.setS(s);
         settingsDialog.setListener(new SettingsDialog.SettingsListener() {
             @Override
             public void gridSizeSelected(int tag) {

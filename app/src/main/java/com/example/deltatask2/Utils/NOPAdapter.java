@@ -1,4 +1,4 @@
-package com.example.deltatask2;
+package com.example.deltatask2.Utils;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,6 +9,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import com.example.deltatask2.R;
 
 import java.util.ArrayList;
 

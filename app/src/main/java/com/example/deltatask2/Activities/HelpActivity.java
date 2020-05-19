@@ -1,4 +1,4 @@
-package com.example.deltatask2;
+package com.example.deltatask2.Activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
+import com.example.deltatask2.R;
 import com.example.deltatask2.databinding.ActivityHelpBinding;
 
 public class HelpActivity extends AppCompatActivity {

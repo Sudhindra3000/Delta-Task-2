@@ -1,4 +1,4 @@
-package com.example.deltatask2;
+package com.example.deltatask2.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -17,12 +17,16 @@ import android.os.Handler;
 import android.os.SystemClock;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.deltatask2.CustomViews.GameCanvas;
+import com.example.deltatask2.Dialogs.QuitDialog;
+import com.example.deltatask2.R;
+import com.example.deltatask2.Utils.Result;
+import com.example.deltatask2.Utils.SortResultsByScore;
 import com.example.deltatask2.databinding.ActivityGameBinding;
 
 import java.util.ArrayList;

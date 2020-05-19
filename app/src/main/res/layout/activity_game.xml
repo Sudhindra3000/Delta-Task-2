@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/gameBackLight"
-    tools:context=".GameActivity">
+    tools:context=".Activities.GameActivity">
 
     <ImageButton
         android:id="@+id/btCancel"
@@ -32,7 +32,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/undo_button" />
 
-    <com.example.deltatask2.ScoreBoard
+    <com.example.deltatask2.CustomViews.ScoreBoard
         android:id="@+id/scoreBoard"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -46,7 +46,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.134" />
 
-    <com.example.deltatask2.GameCanvas
+    <com.example.deltatask2.CustomViews.GameCanvas
         android:id="@+id/gameCanvas"
         android:layout_width="0dp"
         android:layout_height="0dp"

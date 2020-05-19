@@ -1,4 +1,4 @@
-package com.example.deltatask2;
+package com.example.deltatask2.Utils;
 import android.graphics.Color;
 import android.graphics.Paint;
 
@@ -7,7 +7,7 @@ import java.util.Objects;
 public class Line {
     private final int HORIZONTAL = 135, VERTICAL = 468;
 
-    float startX, startY, stopX, stopY;
+    private float startX, startY, stopX, stopY;
     private int orientation;
     public int playerIndex;
     Paint paint;
@@ -18,6 +18,38 @@ public class Line {
 
     public int getOrientation() {
         return orientation;
+    }
+
+    public void setStartX(float startX) {
+        this.startX = startX;
+    }
+
+    public void setStartY(float startY) {
+        this.startY = startY;
+    }
+
+    public void setStopX(float stopX) {
+        this.stopX = stopX;
+    }
+
+    public void setStopY(float stopY) {
+        this.stopY = stopY;
+    }
+
+    public float getStartX() {
+        return startX;
+    }
+
+    public float getStartY() {
+        return startY;
+    }
+
+    public float getStopX() {
+        return stopX;
+    }
+
+    public float getStopY() {
+        return stopY;
     }
 
     public void setOrientation(int orientation) {

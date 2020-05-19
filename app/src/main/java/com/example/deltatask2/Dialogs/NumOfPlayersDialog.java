@@ -1,24 +1,21 @@
-package com.example.deltatask2;
+package com.example.deltatask2.Dialogs;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDialogFragment;
-import androidx.core.content.res.ResourcesCompat;
 
-import java.lang.reflect.Type;
+import com.example.deltatask2.Utils.NOPAdapter;
+import com.example.deltatask2.R;
+
 import java.util.ArrayList;
 
 public class NumOfPlayersDialog extends AppCompatDialogFragment {
@@ -36,7 +33,7 @@ public class NumOfPlayersDialog extends AppCompatDialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        AlertDialog.Builder builder=new AlertDialog.Builder(getContext(),R.style.NOPDialog);
+        AlertDialog.Builder builder=new AlertDialog.Builder(getContext(), R.style.NOPDialog);
 
         View view=getActivity().getLayoutInflater().inflate(R.layout.num_of_players_dialog,null);
         builder.setView(view);

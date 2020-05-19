@@ -1,4 +1,4 @@
-package com.example.deltatask2;
+package com.example.deltatask2.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -11,11 +11,12 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.deltatask2.R;
+import com.example.deltatask2.Utils.Result;
 import com.example.deltatask2.databinding.ActivityResultsBinding;
 
 import java.util.ArrayList;
@@ -52,9 +53,9 @@ public class ResultsActivity extends AppCompatActivity implements MediaPlayer.On
         for (int i = 0; i < n; i++) {
             imageViews.get(i).setVisibility(View.VISIBLE);
             tvScores.get(i).setVisibility(View.VISIBLE);
-            imageViews.get(i).setImageBitmap(getBitmapFromVectorDrawable(this, results.get(i).imageId));
-            tvScores.get(i).setTextColor(Color.parseColor(results.get(i).color));
-            tvScores.get(i).setText(String.valueOf(results.get(i).score));
+            imageViews.get(i).setImageBitmap(getBitmapFromVectorDrawable(this, results.get(i).getImageId()));
+            tvScores.get(i).setTextColor(Color.parseColor(results.get(i).getColor()));
+            tvScores.get(i).setText(String.valueOf(results.get(i).getScore()));
         }
     }
 

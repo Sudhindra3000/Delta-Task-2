@@ -1,21 +1,21 @@
-package com.example.deltatask2;
+package com.example.deltatask2.CustomViews;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
+
+import com.example.deltatask2.Utils.Point;
+import com.example.deltatask2.R;
 
 import java.util.ArrayList;
 
@@ -53,7 +53,7 @@ public class ScoreBoard extends View {
         textPaint.setColor(Color.parseColor(BORDER));
         textPaint.setTextSize(40f);
         textPaint.setTextAlign(Paint.Align.CENTER);
-        Typeface typeface= ResourcesCompat.getFont(getContext(),R.font.bangers);
+        Typeface typeface= ResourcesCompat.getFont(getContext(), R.font.bangers);
         textPaint.setTypeface(typeface);
     }
 

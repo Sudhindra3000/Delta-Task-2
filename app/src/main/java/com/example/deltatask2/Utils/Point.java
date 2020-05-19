@@ -1,4 +1,4 @@
-package com.example.deltatask2;
+package com.example.deltatask2.Utils;
 
 public class Point {
 

@@ -1,4 +1,4 @@
-package com.example.deltatask2;
+package com.example.deltatask2.Dialogs;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -10,6 +10,8 @@ import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDialogFragment;
+
+import com.example.deltatask2.R;
 
 public class QuitDialog extends AppCompatDialogFragment {
 
@@ -28,7 +30,7 @@ public class QuitDialog extends AppCompatDialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        AlertDialog.Builder builder=new AlertDialog.Builder(getContext(),R.style.QuitDialog);
+        AlertDialog.Builder builder=new AlertDialog.Builder(getContext(), R.style.QuitDialog);
         View view=getActivity().getLayoutInflater().inflate(R.layout.quit_dialog,null);
         builder.setView(view);
 

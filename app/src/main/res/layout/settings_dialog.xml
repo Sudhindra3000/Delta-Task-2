@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/gameBackLight"
     android:orientation="vertical"
-    tools:context=".MenuActivity"
+    tools:context=".Activities.MenuActivity"
     tools:viewBindingIgnore="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
