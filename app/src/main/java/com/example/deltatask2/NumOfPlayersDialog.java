@@ -19,12 +19,14 @@ import androidx.appcompat.app.AppCompatDialogFragment;
 import androidx.core.content.res.ResourcesCompat;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 
 public class NumOfPlayersDialog extends AppCompatDialogFragment {
 
     Button button;
     Spinner spinner;
-    ArrayAdapter adapter;
+    NOPAdapter nopAdapter;
+    ArrayList<String> strings;
     Listener listener;
 
     public void setListener(Listener listener) {
@@ -39,11 +41,12 @@ public class NumOfPlayersDialog extends AppCompatDialogFragment {
         View view=getActivity().getLayoutInflater().inflate(R.layout.num_of_players_dialog,null);
         builder.setView(view);
 
+        initList();
+
         button=view.findViewById(R.id.btOk);
         spinner=view.findViewById(R.id.spinner);
-        adapter=ArrayAdapter.createFromResource(getContext(),R.array.numOfPlayers,android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
+        nopAdapter=new NOPAdapter(getContext(),strings);
+        spinner.setAdapter(nopAdapter);
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -65,6 +68,15 @@ public class NumOfPlayersDialog extends AppCompatDialogFragment {
         });
 
         return builder.create();
+    }
+
+    private void initList(){
+        strings=new ArrayList<>();
+        strings.add("Two");
+        strings.add("Three");
+        strings.add("Four");
+        strings.add("Five");
+        strings.add("Six");
     }
 
     public interface Listener{
