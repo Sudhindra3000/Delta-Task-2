@@ -1,15 +1,17 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowFullscreen">true</item>
+        <item name="android:statusBarColor">@color/gameBackLight</item>
+        <item name="android:navigationBarColor">@color/gameBackLight</item>
     </style>
 
-    <style name="NOPDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
+    <style name="NOPDialog" parent="Theme.MaterialComponents.Light.Dialog.Alert">
         <item name="android:windowBackground">@drawable/popup_background</item>
         <item name="android:windowAnimationStyle">@style/NOPDialogAnim</item>
     </style>
@@ -19,7 +21,7 @@
         <item name="android:windowExitAnimation">@anim/dialog_slide_out_right</item>
     </style>
 
-    <style name="SettingsDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
+    <style name="SettingsDialog" parent="Theme.MaterialComponents.Light.Dialog.Alert">
         <item name="android:windowBackground">@drawable/popup_background</item>
         <item name="android:windowAnimationStyle">@style/SettingsDialogAnim</item>
     </style>
@@ -29,7 +31,7 @@
         <item name="android:windowExitAnimation">@anim/dialog_slide_out_left</item>
     </style>
 
-    <style name="QuitDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
+    <style name="QuitDialog" parent="Theme.MaterialComponents.Light.Dialog.Alert">
         <item name="android:windowBackground">@drawable/popup_background</item>
         <item name="android:windowAnimationStyle">@style/QuitDialogAnim</item>
     </style>

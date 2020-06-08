@@ -27,7 +27,7 @@ public class MenuActivity extends AppCompatActivity implements MediaPlayer.OnCom
     private SharedPreferences sharedPreferences;
     private SettingsDialog settingsDialog;
     private MediaPlayer mediaPlayer;
-    private long lastClickTime=0;
+    private long lastClickTime = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +41,9 @@ public class MenuActivity extends AppCompatActivity implements MediaPlayer.OnCom
                         | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                         | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                         | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_FULLSCREEN);
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+                        | View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR);
 
         getWindow().setEnterTransition(null);
         getWindow().getSharedElementEnterTransition().setDuration(400);
@@ -76,9 +78,9 @@ public class MenuActivity extends AppCompatActivity implements MediaPlayer.OnCom
     }
 
     public void showSettings(View view) {
-        if (SystemClock.elapsedRealtime()-lastClickTime<800)
+        if (SystemClock.elapsedRealtime() - lastClickTime < 800)
             return;
-        lastClickTime=SystemClock.elapsedRealtime();
+        lastClickTime = SystemClock.elapsedRealtime();
         playSoundInMedia(R.raw.menu_click);
         settingsDialog.setS(s);
         settingsDialog.setListener(new SettingsDialog.SettingsListener() {
@@ -93,9 +95,9 @@ public class MenuActivity extends AppCompatActivity implements MediaPlayer.OnCom
     }
 
     public void openNOPDialog(View view) {
-        if (SystemClock.elapsedRealtime()-lastClickTime<800)
+        if (SystemClock.elapsedRealtime() - lastClickTime < 800)
             return;
-        lastClickTime=SystemClock.elapsedRealtime();
+        lastClickTime = SystemClock.elapsedRealtime();
         playSoundInMedia(R.raw.bt_click_1);
         final NumOfPlayersDialog dialog = new NumOfPlayersDialog();
         dialog.setListener(new NumOfPlayersDialog.Listener() {

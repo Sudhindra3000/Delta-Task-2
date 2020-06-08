@@ -194,9 +194,9 @@
 
     <Button
         android:id="@+id/btMainMenu"
-        android:layout_width="152dp"
+        android:layout_width="172dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="16dp"
         android:backgroundTint="@color/marioRed"
         android:fontFamily="@font/bangers"
         android:gravity="center"
@@ -206,6 +206,5 @@
         android:textSize="30sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
