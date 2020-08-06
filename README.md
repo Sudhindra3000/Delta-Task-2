@@ -13,8 +13,8 @@ A turn-based multiplayer game like [dots and boxes](https://en.m.wikipedia.org/w
 ## Screenshots
 |||||
 |:----------------------------------------:|:-----------------------------------------:|:-----------------------------------------:|:-----------------------------------------:|
-| ![Imgur](https://i.imgur.com/nJWbD75.png) | ![Imgur](https://i.imgur.com/DaNaJ7z.png) | ![Imgur](https://i.imgur.com/asf0ms2.png) |![Imgur](https://i.imgur.com/XiQEaqr.png) |
-| ![Imgur](https://i.imgur.com/L60MnZa.png) | ![Imgur](https://i.imgur.com/JcOoLDh.png) | ![Imgur](https://i.imgur.com/buozDnu.png) |![Imgur](https://i.imgur.com/FgebSde.png) |
+| ![Imgur](https://i.imgur.com/8mk7eRR.png) | ![Imgur](https://i.imgur.com/QdAFcdp.png) | ![Imgur](https://i.imgur.com/XFVcvdH.png) |![Imgur](https://i.imgur.com/5cXm862.png) |
+| ![Imgur](https://i.imgur.com/TmcHwJC.png) | ![Imgur](https://i.imgur.com/Z15vRBp.png) | ![Imgur](https://i.imgur.com/34qfTRv.png) |![Imgur](https://i.imgur.com/pJYk4Jp.png) |
 
 ## Resources
 
