@@ -23,12 +23,9 @@ import java.util.ArrayList;
 
 public class ResultsActivity extends AppCompatActivity implements MediaPlayer.OnCompletionListener {
 
-    private static final String TAG = "ResultsActivity";
-    ActivityResultsBinding binding;
-    private ArrayList<Result> results;
+    private ActivityResultsBinding binding;
     private ArrayList<ImageView> imageViews;
     private ArrayList<TextView> tvScores;
-    private MediaPlayer mediaPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +45,7 @@ public class ResultsActivity extends AppCompatActivity implements MediaPlayer.On
                         | View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR);
 
         int n = getIntent().getIntExtra("n", 0);
-        results = getIntent().getParcelableArrayListExtra("sortedResults");
+        ArrayList<Result> results = getIntent().getParcelableArrayListExtra("sortedResults");
 
         setupLists();
 
@@ -90,17 +87,12 @@ public class ResultsActivity extends AppCompatActivity implements MediaPlayer.On
     }
 
     public void showMainMenu(View view) {
-        playSoundInMedia(R.raw.bt_click_1);
+        playSoundInMedia();
         startActivity(new Intent(ResultsActivity.this, MenuActivity.class));
     }
 
-    @Override
-    public void onBackPressed() {
-        startActivity(new Intent(ResultsActivity.this, MenuActivity.class));
-    }
-
-    private void playSoundInMedia(int resID) {
-        mediaPlayer = MediaPlayer.create(ResultsActivity.this, resID);
+    private void playSoundInMedia() {
+        MediaPlayer mediaPlayer = MediaPlayer.create(ResultsActivity.this, R.raw.bt_click_1);
         mediaPlayer.start();
         mediaPlayer.setOnCompletionListener(this);
     }
@@ -111,5 +103,10 @@ public class ResultsActivity extends AppCompatActivity implements MediaPlayer.On
             mp.release();
             mp = null;
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(ResultsActivity.this, MenuActivity.class));
     }
 }

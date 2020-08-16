@@ -1,11 +1,13 @@
 package com.example.deltatask2.Activities;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.animation.Animator;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.MediaPlayer;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.view.View;
@@ -17,25 +19,28 @@ import com.example.deltatask2.Dialogs.NumOfPlayersDialog;
 import com.example.deltatask2.Dialogs.SettingsDialog;
 import com.example.deltatask2.R;
 import com.example.deltatask2.databinding.ActivityMenuBinding;
+import com.thekhaeng.pushdownanim.PushDownAnim;
+
+import static com.thekhaeng.pushdownanim.PushDownAnim.MODE_STATIC_DP;
 
 public class MenuActivity extends AppCompatActivity implements MediaPlayer.OnCompletionListener {
 
-    private static final String TAG = "MenuActivity";
     private ActivityMenuBinding binding;
-    private Animation multAnim;
-    private int n = 2, s;
+
     private SharedPreferences sharedPreferences;
+
     private SettingsDialog settingsDialog;
-    private MediaPlayer mediaPlayer;
+
+    private int n = 2, s;
     private long lastClickTime = 0;
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityMenuBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        View decorView = getWindow().getDecorView();
-        decorView.setSystemUiVisibility(
+        getWindow().getDecorView().setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_IMMERSIVE
                         | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                         | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
@@ -44,31 +49,24 @@ public class MenuActivity extends AppCompatActivity implements MediaPlayer.OnCom
                         | View.SYSTEM_UI_FLAG_FULLSCREEN
                         | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
                         | View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR);
-
         getWindow().setEnterTransition(null);
         getWindow().getSharedElementEnterTransition().setDuration(400);
+
+
+        PushDownAnim.setPushDownAnimTo(binding.settingsButton).setScale(MODE_STATIC_DP, PushDownAnim.DEFAULT_PUSH_STATIC);
+        PushDownAnim.setPushDownAnimTo(binding.helpButton).setScale(MODE_STATIC_DP, PushDownAnim.DEFAULT_PUSH_STATIC);
 
         sharedPreferences = MenuActivity.this.getSharedPreferences("pref", MODE_PRIVATE);
         s = sharedPreferences.getInt("s", 6);
 
         settingsDialog = new SettingsDialog();
 
-        multAnim = AnimationUtils.loadAnimation(this, R.anim.mult_anim_2);
-        binding.btMultiplayer.setAnimation(multAnim);
+        Animation multAnim = AnimationUtils.loadAnimation(this, R.anim.mult_anim_2);
+        binding.btMultiPlayer.setAnimation(multAnim);
 
-        binding.helpButton.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
-            @Override
-            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
-                revealHelpButton();
-            }
-        });
+        binding.helpButton.addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> revealHelpButton());
 
-        binding.settingsButton.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
-            @Override
-            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
-                revealSettingsButton();
-            }
-        });
+        binding.settingsButton.addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> revealSettingsButton());
     }
 
     public void showHelp(View view) {
@@ -83,13 +81,10 @@ public class MenuActivity extends AppCompatActivity implements MediaPlayer.OnCom
         lastClickTime = SystemClock.elapsedRealtime();
         playSoundInMedia(R.raw.menu_click);
         settingsDialog.setS(s);
-        settingsDialog.setListener(new SettingsDialog.SettingsListener() {
-            @Override
-            public void gridSizeSelected(int tag) {
-                playSoundInMedia(R.raw.tic_tock_click);
-                s = tag;
-                sharedPreferences.edit().putInt("s", s).apply();
-            }
+        settingsDialog.setListener(tag -> {
+            playSoundInMedia(R.raw.tic_tock_click);
+            s = tag;
+            sharedPreferences.edit().putInt("s", s).apply();
         });
         settingsDialog.show(getSupportFragmentManager(), "settings");
     }
@@ -145,12 +140,8 @@ public class MenuActivity extends AppCompatActivity implements MediaPlayer.OnCom
         animator.start();
     }
 
-    public void onBackPressed() {
-        finishAffinity();
-    }
-
     private void playSoundInMedia(int resID) {
-        mediaPlayer = MediaPlayer.create(MenuActivity.this, resID);
+        MediaPlayer mediaPlayer = MediaPlayer.create(MenuActivity.this, resID);
         mediaPlayer.start();
         mediaPlayer.setOnCompletionListener(this);
     }
@@ -161,5 +152,10 @@ public class MenuActivity extends AppCompatActivity implements MediaPlayer.OnCom
             mp.release();
             mp = null;
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        finishAffinity();
     }
 }

@@ -1,23 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tvSpinnerDropdown"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:ellipsize="end"
+    android:fontFamily="@font/bangers"
     android:foreground="?attr/selectableItemBackground"
-    android:orientation="vertical">
-
-    <TextView
-        android:id="@+id/tvSpinnerDrpdown"
-        android:layout_width="match_parent"
-        android:layout_height="43dp"
-        android:background="@android:color/white"
-        android:fontFamily="@font/bangers"
-        android:gravity="center"
-        android:padding="5dp"
-        android:text="Number"
-        android:textColor="@color/luigiGreen"
-        android:textSize="24sp"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="363dp" />
-</LinearLayout>
+    android:gravity="center"
+    android:maxLines="1"
+    android:padding="5dp"
+    android:text="Number"
+    android:textAppearance="?attr/textAppearanceSubtitle1"
+    android:textColor="@color/luigiGreen"
+    android:textSize="24sp" />

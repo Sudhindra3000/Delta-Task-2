@@ -8,4 +8,5 @@
     <color name="gameBack">#F3ECCF</color>
     <color name="gameBackLight">#F7F4E3</color>
     <color name="lightGrey">#494849</color>
+    <color name="settingsBtRipple">#B1B1B1</color>
 </resources>

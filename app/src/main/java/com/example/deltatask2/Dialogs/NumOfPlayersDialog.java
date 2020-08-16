@@ -3,28 +3,23 @@ package com.example.deltatask2.Dialogs;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
-import com.example.deltatask2.Utils.NOPAdapter;
+import com.example.deltatask2.Adapters.NOPAdapter;
 import com.example.deltatask2.R;
-
-import java.util.ArrayList;
+import com.example.deltatask2.databinding.NumOfPlayersDialogBinding;
 
 public class NumOfPlayersDialog extends AppCompatDialogFragment {
 
-    Button button;
-    Spinner spinner;
-    NOPAdapter nopAdapter;
-    ArrayList<String> strings;
-    Listener listener;
+    private Listener listener;
 
     public void setListener(Listener listener) {
         this.listener = listener;
@@ -33,22 +28,20 @@ public class NumOfPlayersDialog extends AppCompatDialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        AlertDialog.Builder builder=new AlertDialog.Builder(getContext(), R.style.NOPDialog);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.NOPDialog);
 
-        View view=getActivity().getLayoutInflater().inflate(R.layout.num_of_players_dialog,null);
-        builder.setView(view);
+        NumOfPlayersDialogBinding binding = NumOfPlayersDialogBinding.inflate(requireActivity().getLayoutInflater());
+        builder.setView(binding.getRoot());
 
-        initList();
+        String[] strings = requireContext().getResources().getStringArray(R.array.nop);
 
-        button=view.findViewById(R.id.btOk);
-        spinner=view.findViewById(R.id.spinner);
-        nopAdapter=new NOPAdapter(getContext(),strings);
-        spinner.setAdapter(nopAdapter);
+        NOPAdapter nopAdapter = new NOPAdapter(requireContext(), strings);
+        binding.spinner.setAdapter(nopAdapter);
 
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        binding.spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                listener.onNSelected(position+2);
+                listener.onNSelected(position + 2);
             }
 
             @Override
@@ -57,40 +50,29 @@ public class NumOfPlayersDialog extends AppCompatDialogFragment {
             }
         });
 
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                listener.ok();
-            }
-        });
+        binding.btOk.setOnClickListener(v -> listener.ok());
 
         return builder.create();
     }
 
-    private void initList(){
-        strings=new ArrayList<>();
-        strings.add("Two");
-        strings.add("Three");
-        strings.add("Four");
-        strings.add("Five");
-        strings.add("Six");
-    }
-
-    public interface Listener{
+    public interface Listener {
         void onNSelected(int n);
+
         void ok();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onDismiss(@NonNull DialogInterface dialog) {
         super.onDismiss(dialog);
-        View decorView = getActivity().getWindow().getDecorView();
-        decorView.setSystemUiVisibility(
+        getActivity().getWindow().getDecorView().setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_IMMERSIVE
                         | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                         | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                         | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                         | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_FULLSCREEN);
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+                        | View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR);
     }
 }

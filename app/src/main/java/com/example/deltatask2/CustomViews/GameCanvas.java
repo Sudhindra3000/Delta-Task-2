@@ -22,17 +22,17 @@ public class GameCanvas extends View {
     private final int HORIZONTAL = 135, VERTICAL = 468;
     private static final String TAG = "GameCanvas";
     private final String RED = "#FF6160", BLACK = "#494849";
-    private int nDots, nLines, maxSquares, numOfPlayers, currentPlayer;
-    private int oS, nS, a;
+    private int nLines;
+    private int maxSquares;
+    private int numOfPlayers;
+    private int currentPlayer;
+    private int a;
     private float rC, wL;
-    private double oX, oY, x, y, rx, ry, rxS, ryS, X, Y;
     private boolean squareAdded = false;
-    private int[] scores;
     private Paint paintGrid, paintLine;
     private Point[][] gridPattern;
     private ArrayList<Line> lines;
     private ArrayList<Square> squares;
-    private Line line;
     private CanvasListener listener;
     private String[] colors;
     public boolean two = false;
@@ -71,30 +71,26 @@ public class GameCanvas extends View {
     }
 
     public void setGridSize(int n) {
-        nDots = n;
-        nLines = nDots - 1;
+        nLines = n - 1;
         maxSquares = nLines * nLines;
-        gridPattern = new Point[nDots][nDots];
+        gridPattern = new Point[n][n];
     }
 
     public void setPlayers(int numOfPlayers, String[] colors) {
         this.numOfPlayers = numOfPlayers;
         this.colors = new String[numOfPlayers];
-        scores = new int[numOfPlayers];
-        for (int i = 0; i < numOfPlayers; i++)
-            this.colors[i] = colors[i];
+        System.arraycopy(colors, 0, this.colors, 0, numOfPlayers);
         currentPlayer = numOfPlayers - 1;
     }
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        oS = w;
-        rC = (float) (oS * 0.02);
-        wL = (float) (oS * 0.015);
+        rC = (float) (w * 0.02);
+        wL = (float) (w * 0.015);
         paintLine.setStrokeWidth(wL);
-        Log.i(TAG, "onSizeChanged: s=" + oS);
-        nS = (int) (oS - 2 * rC);
+        Log.i(TAG, "onSizeChanged: s=" + w);
+        int nS = (int) (w - 2 * rC);
         a = nS / nLines;
         for (int i = 0; i <= nLines; i++) {
             for (int j = 0; j <= nLines; j++) {
@@ -127,41 +123,41 @@ public class GameCanvas extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        oX = event.getX();
-        oY = event.getY();
-        x = oX - rC;
-        y = oY - rC;
-        rx = x / a;
-        ry = y / a;
-        rxS = Math.floor(rx);
-        ryS = Math.floor(ry);
-        X = rx - rxS;
-        Y = ry - ryS;
+        double oX = event.getX();
+        double oY = event.getY();
+        double x = oX - rC;
+        double y = oY - rC;
+        double rx = x / a;
+        double ry = y / a;
+        double rxS = Math.floor(rx);
+        double ryS = Math.floor(ry);
+        double x1 = rx - rxS;
+        double y1 = ry - ryS;
         if (event.getAction() == MotionEvent.ACTION_UP) {
-            line = new Line(paintLine);
+            Line line = new Line(paintLine);
             if (rxS < 5 && ryS < 5) {
-                if (X >= Y) {
-                    if (X + Y >= 1) {  //RIGHT
+                if (x1 >= y1) {
+                    if (x1 + y1 >= 1) {  //RIGHT
                         line.setStartX((float) ((rxS + 1) * a));
                         line.setStartY((float) (ryS * a));
                         line.setStopX((float) ((rxS + 1) * a));
                         line.setStopY((float) ((ryS + 1) * a));
                         line.setOrientation(VERTICAL);
-                    } else if (X + Y < 1) {  //BOTTOM
+                    } else if (x1 + y1 < 1) {  //BOTTOM
                         line.setStartX((float) (rxS * a));
                         line.setStartY((float) (ryS * a));
                         line.setStopX((float) ((rxS + 1) * a));
                         line.setStopY((float) (ryS * a));
                         line.setOrientation(HORIZONTAL);
                     }
-                } else if (X < Y) {
-                    if (X + Y >= 1) {  //TOP
+                } else if (x1 < y1) {
+                    if (x1 + y1 >= 1) {  //TOP
                         line.setStartX((float) (rxS * a));
                         line.setStartY((float) ((ryS + 1) * a));
                         line.setStopX((float) ((rxS + 1) * a));
                         line.setStopY((float) ((ryS + 1) * a));
                         line.setOrientation(HORIZONTAL);
-                    } else if (X + Y < 1) {  //LEFT
+                    } else if (x1 + y1 < 1) {  //LEFT
                         line.setStartX((float) (rxS * a));
                         line.setStartY((float) (ryS * a));
                         line.setStopX((float) (rxS * a));
@@ -303,10 +299,7 @@ public class GameCanvas extends View {
             }
         }
         if (exists1 | exists2) {
-            if (exists1 && exists2)
-                two = true;
-            else
-                two = false;
+            two = exists1 && exists2;
             squareAdded = true;
             listener.onSquareAdded(currentPlayer);
             if (exists1 && exists2)

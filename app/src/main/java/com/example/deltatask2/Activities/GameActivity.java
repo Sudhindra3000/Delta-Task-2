@@ -28,23 +28,27 @@ import com.example.deltatask2.R;
 import com.example.deltatask2.Utils.Result;
 import com.example.deltatask2.Utils.SortResultsByScore;
 import com.example.deltatask2.databinding.ActivityGameBinding;
+import com.thekhaeng.pushdownanim.PushDownAnim;
 
 import java.util.ArrayList;
 import java.util.Collections;
 
+import static com.thekhaeng.pushdownanim.PushDownAnim.MODE_STATIC_DP;
+
 public class GameActivity extends AppCompatActivity implements MediaPlayer.OnCompletionListener {
 
-    ActivityGameBinding binding;
-    private int n, s, currentPlayer = 0;
-    private boolean squareAdded = false, two;
-    private static final String TAG = "MainActivity";
+    private ActivityGameBinding binding;
+
+    private int n;
+    private int currentPlayer = 0;
+    private boolean squareAdded = false;
     private int[] scores;
-    private String c1 = "#FF6160", c2 = "#38DF9C", c3 = "#60C5FF", c4 = "#FF60AA", c5 = "#8060FF", c6 = "#4545F3";
     private String[] colors;
     private ArrayList<Bitmap> playerBitmaps, borderBitmaps;
     private ArrayList<Result> results;
+
     private Vibrator vibrator;
-    private MediaPlayer mediaPlayer;
+
     private long lastClickTime = 0;
 
     @Override
@@ -64,13 +68,17 @@ public class GameActivity extends AppCompatActivity implements MediaPlayer.OnCom
                         | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
                         | View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR);
 
+
+        PushDownAnim.setPushDownAnimTo(binding.btCancel).setScale(MODE_STATIC_DP, PushDownAnim.DEFAULT_PUSH_STATIC);
+        PushDownAnim.setPushDownAnimTo(binding.btUndo).setScale(MODE_STATIC_DP, PushDownAnim.DEFAULT_PUSH_STATIC);
+
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
         n = getIntent().getIntExtra("n", 2);
-        s = getIntent().getIntExtra("s", 6);
+        int s = getIntent().getIntExtra("s", 6);
 
         setupIcons();
-        setupColors();
+        colors = getResources().getStringArray(R.array.playerColors);
         binding.gameCanvas.setGridSize(s);
         binding.gameCanvas.setPlayers(n, colors);
         binding.scoreBoard.setPlayers(n, playerBitmaps, borderBitmaps, colors);
@@ -97,7 +105,6 @@ public class GameActivity extends AppCompatActivity implements MediaPlayer.OnCom
                 binding.scoreBoard.setScores(scores);
                 squareAdded = true;
                 binding.btUndo.setVisibility(View.VISIBLE);
-                two = binding.gameCanvas.two;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
                     vibrator.vibrate(VibrationEffect.createOneShot(200, VibrationEffect.DEFAULT_AMPLITUDE));
                 else
@@ -129,16 +136,6 @@ public class GameActivity extends AppCompatActivity implements MediaPlayer.OnCom
         borderBitmaps.add(getBitmapFromVectorDrawable(this, R.drawable.border4));
         borderBitmaps.add(getBitmapFromVectorDrawable(this, R.drawable.border5));
         borderBitmaps.add(getBitmapFromVectorDrawable(this, R.drawable.border6));
-    }
-
-    private void setupColors() {
-        colors = new String[6];
-        colors[0] = c1;
-        colors[1] = c2;
-        colors[2] = c3;
-        colors[3] = c4;
-        colors[4] = c5;
-        colors[5] = c6;
     }
 
     public void cancel(View view) {
@@ -193,7 +190,7 @@ public class GameActivity extends AppCompatActivity implements MediaPlayer.OnCom
         return bitmap;
     }
 
-    public void showGOToast(String color) {
+    public void showGameOverToast(String color) {
         View toastLayout = getLayoutInflater().inflate(R.layout.go_toast_layout, (ViewGroup) findViewById(R.id.goToastRoot));
         ConstraintLayout constraintLayout = toastLayout.findViewById(R.id.toastBack);
         constraintLayout.setBackgroundColor(Color.parseColor(color));
@@ -210,16 +207,13 @@ public class GameActivity extends AppCompatActivity implements MediaPlayer.OnCom
         setupImageId();
         for (int i = 0; i < n; i++)
             results.get(i).setScoreAndColor(scores[i], colors[i]);
-        showGOToast(colors[currentPlayer]);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Intent intent = new Intent(GameActivity.this, ResultsActivity.class);
-                Collections.sort(results, new SortResultsByScore());
-                intent.putExtra("n", n);
-                intent.putExtra("sortedResults", results);
-                startActivity(intent);
-            }
+        showGameOverToast(colors[currentPlayer]);
+        new Handler().postDelayed(() -> {
+            Intent intent = new Intent(GameActivity.this, ResultsActivity.class);
+            Collections.sort(results, new SortResultsByScore());
+            intent.putExtra("n", n);
+            intent.putExtra("sortedResults", results);
+            startActivity(intent);
         }, 2000);
     }
 
@@ -232,13 +226,8 @@ public class GameActivity extends AppCompatActivity implements MediaPlayer.OnCom
         results.add(new Result(R.drawable.player6));
     }
 
-    @Override
-    public void onBackPressed() {
-        cancel(binding.btCancel);
-    }
-
     private void playSoundInMedia(int resID) {
-        mediaPlayer = MediaPlayer.create(GameActivity.this, resID);
+        MediaPlayer mediaPlayer = MediaPlayer.create(GameActivity.this, resID);
         mediaPlayer.start();
         mediaPlayer.setOnCompletionListener(this);
     }
@@ -249,5 +238,10 @@ public class GameActivity extends AppCompatActivity implements MediaPlayer.OnCom
             mp.release();
             mp = null;
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        cancel(binding.btCancel);
     }
 }

@@ -1,4 +1,4 @@
-package com.example.deltatask2.Utils;
+package com.example.deltatask2.Adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -14,9 +14,9 @@ import com.example.deltatask2.R;
 
 import java.util.ArrayList;
 
-public class NOPAdapter extends ArrayAdapter {
+public class NOPAdapter extends ArrayAdapter<String> {
 
-    public NOPAdapter(@NonNull Context context, ArrayList<String> strings) {
+    public NOPAdapter(@NonNull Context context, String[] strings) {
         super(context, 0, strings);
     }
 
@@ -38,7 +38,7 @@ public class NOPAdapter extends ArrayAdapter {
             );
         }
 
-        TextView textViewName = convertView.findViewById(R.id.tvSpinnerDrpdown);
+        TextView textViewName = convertView.findViewById(R.id.tvSpinnerDropdown);
         String currentItem = (String) getItem(position);
 
         if (currentItem != null)

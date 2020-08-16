@@ -3,25 +3,31 @@ package com.example.deltatask2.Dialogs;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
 import com.example.deltatask2.R;
+import com.example.deltatask2.databinding.SettingsDialogBinding;
+import com.thekhaeng.pushdownanim.PushDownAnim;
 
 import java.util.ArrayList;
 
-public class SettingsDialog extends AppCompatDialogFragment{
+import static com.thekhaeng.pushdownanim.PushDownAnim.MODE_STATIC_DP;
 
-    ArrayList<Button> buttons;
-    ArrayList<ImageView> borders;
-    ImageButton back;
+public class SettingsDialog extends AppCompatDialogFragment {
+
+    private SettingsDialogBinding binding;
+
+    private ArrayList<Button> buttons;
+    private ArrayList<ImageView> borders;
     private int s;
     private SettingsListener listener;
 
@@ -33,75 +39,67 @@ public class SettingsDialog extends AppCompatDialogFragment{
         this.s = s;
     }
 
-    public interface SettingsListener{
+    public interface SettingsListener {
         void gridSizeSelected(int tag);
     }
 
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        AlertDialog.Builder builder=new AlertDialog.Builder(getActivity(), R.style.SettingsDialog);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.SettingsDialog);
 
-        View view=getActivity().getLayoutInflater().inflate(R.layout.settings_dialog,null);
-        builder.setView(view);
+        binding = SettingsDialogBinding.inflate(requireActivity().getLayoutInflater());
+        builder.setView(binding.getRoot());
 
-        back=view.findViewById(R.id.sback);
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dismiss();
-            }
-        });
+        binding.btBack.setOnClickListener(v -> dismiss());
 
+        PushDownAnim.setPushDownAnimTo(binding.btBack).setScale(MODE_STATIC_DP, PushDownAnim.DEFAULT_PUSH_STATIC);
 
-
-        buttons=new ArrayList<>();
-        setupButtons(view);
-        for (Button button :buttons) {
-            button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    listener.gridSizeSelected(Integer.parseInt(v.getTag().toString()));
-                    showBorder(Integer.parseInt(v.getTag().toString()));
-                }
+        buttons = new ArrayList<>();
+        initButtons();
+        for (Button button : buttons) {
+            button.setOnClickListener(v -> {
+                listener.gridSizeSelected(Integer.parseInt(v.getTag().toString()));
+                showBorder(Integer.parseInt(v.getTag().toString()));
             });
         }
-        borders=new ArrayList<>();
-        setupBorders(view);
+        borders = new ArrayList<>();
+        initBorders();
         showBorder(s);
 
         return builder.create();
     }
 
-    private void setupButtons(View view){
-        buttons.add((Button) view.findViewById(R.id.g3));
-        buttons.add((Button) view.findViewById(R.id.g4));
-        buttons.add((Button) view.findViewById(R.id.g5));
-        buttons.add((Button) view.findViewById(R.id.g6));
-        buttons.add((Button) view.findViewById(R.id.g7));
-        buttons.add((Button) view.findViewById(R.id.g8));
-        buttons.add((Button) view.findViewById(R.id.g9));
-        buttons.add((Button) view.findViewById(R.id.g10));
+    private void initButtons() {
+        buttons.add(binding.g3);
+        buttons.add(binding.g4);
+        buttons.add(binding.g5);
+        buttons.add(binding.g6);
+        buttons.add(binding.g7);
+        buttons.add(binding.g8);
+        buttons.add(binding.g9);
+        buttons.add(binding.g10);
     }
 
-    private void setupBorders(View view){
-        borders.add((ImageView) view.findViewById(R.id.gsB3));
-        borders.add((ImageView) view.findViewById(R.id.gsB4));
-        borders.add((ImageView) view.findViewById(R.id.gsB5));
-        borders.add((ImageView) view.findViewById(R.id.gsB6));
-        borders.add((ImageView) view.findViewById(R.id.gsB7));
-        borders.add((ImageView) view.findViewById(R.id.gsB8));
-        borders.add((ImageView) view.findViewById(R.id.gsB9));
-        borders.add((ImageView) view.findViewById(R.id.gsB10));
+    private void initBorders() {
+        borders.add(binding.gsB3);
+        borders.add(binding.gsB4);
+        borders.add(binding.gsB5);
+        borders.add(binding.gsB6);
+        borders.add(binding.gsB7);
+        borders.add(binding.gsB8);
+        borders.add(binding.gsB9);
+        borders.add(binding.gsB10);
     }
 
-    private void showBorder(int tag){
-        for (ImageView imageView :borders) {
+    private void showBorder(int tag) {
+        for (ImageView imageView : borders) {
             imageView.setVisibility(View.INVISIBLE);
         }
-        borders.get(tag-3).setVisibility(View.VISIBLE);
+        borders.get(tag - 3).setVisibility(View.VISIBLE);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onDismiss(@NonNull DialogInterface dialog) {
         super.onDismiss(dialog);
@@ -112,6 +110,8 @@ public class SettingsDialog extends AppCompatDialogFragment{
                         | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                         | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                         | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_FULLSCREEN);
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+                        | View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR);
     }
 }
