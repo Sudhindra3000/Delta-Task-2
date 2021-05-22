@@ -1,4 +1,4 @@
-package com.example.deltatask2.Adapters;
+package com.example.deltatask2.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -11,8 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.deltatask2.R;
-
-import java.util.ArrayList;
 
 public class NOPAdapter extends ArrayAdapter<String> {
 

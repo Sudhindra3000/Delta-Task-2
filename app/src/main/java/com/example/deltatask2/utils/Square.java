@@ -1,4 +1,4 @@
-package com.example.deltatask2.Utils;
+package com.example.deltatask2.utils;
 
 import android.graphics.Color;
 import android.graphics.Paint;

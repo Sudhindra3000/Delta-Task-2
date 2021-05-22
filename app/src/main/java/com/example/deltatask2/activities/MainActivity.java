@@ -1,4 +1,4 @@
-package com.example.deltatask2.Activities;
+package com.example.deltatask2.activities;
 
 import android.content.Intent;
 import android.media.MediaPlayer;

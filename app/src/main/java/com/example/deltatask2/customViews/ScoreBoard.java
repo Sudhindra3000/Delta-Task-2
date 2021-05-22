@@ -1,4 +1,4 @@
-package com.example.deltatask2.CustomViews;
+package com.example.deltatask2.customViews;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -14,7 +14,7 @@ import android.view.View;
 import androidx.annotation.Nullable;
 import androidx.core.content.res.ResourcesCompat;
 
-import com.example.deltatask2.Utils.Point;
+import com.example.deltatask2.utils.Point;
 import com.example.deltatask2.R;
 
 import java.util.ArrayList;

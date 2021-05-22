@@ -1,4 +1,4 @@
-package com.example.deltatask2.Dialogs
+package com.example.deltatask2.dialogs
 
 import android.app.AlertDialog
 import android.app.Dialog

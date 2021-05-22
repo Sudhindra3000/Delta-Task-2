@@ -12,19 +12,19 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".Activities.ResultsActivity"
+            android:name=".activities.ResultsActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Activities.GameActivity"
+            android:name=".activities.GameActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Activities.HelpActivity"
+            android:name=".activities.HelpActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Activities.MenuActivity"
+            android:name=".activities.MenuActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Activities.MainActivity"
+            android:name=".activities.MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

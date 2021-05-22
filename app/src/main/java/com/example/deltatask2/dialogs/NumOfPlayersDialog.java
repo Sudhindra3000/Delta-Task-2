@@ -1,4 +1,4 @@
-package com.example.deltatask2.Dialogs;
+package com.example.deltatask2.dialogs;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -13,7 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
-import com.example.deltatask2.Adapters.NOPAdapter;
+import com.example.deltatask2.adapters.NOPAdapter;
 import com.example.deltatask2.R;
 import com.example.deltatask2.databinding.NumOfPlayersDialogBinding;
 
