@@ -57,7 +57,10 @@ class QuitDialog(
                             horizontalArrangement = Arrangement.SpaceEvenly
                         ) {
                             DialogButton(text = "Yes", onClick = onYesClicked)
-                            DialogButton(text = "No", onClick = onNoClicked)
+                            DialogButton(text = "No", onClick = {
+                                onNoClicked()
+                                dismiss()
+                            })
                         }
                     }
                 }

@@ -35,8 +35,6 @@ import com.thekhaeng.pushdownanim.PushDownAnim;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import kotlin.Unit;
-
 public class GameActivity extends AppCompatActivity implements MediaPlayer.OnCompletionListener {
 
     private ActivityGameBinding binding;
@@ -49,7 +47,14 @@ public class GameActivity extends AppCompatActivity implements MediaPlayer.OnCom
     private ArrayList<Bitmap> playerBitmaps, borderBitmaps;
     private ArrayList<Result> results;
 
-    private final QuitDialog quitDialog = new QuitDialog(this::onYesClicked, this::onNoClicked);
+    private final QuitDialog quitDialog = new QuitDialog(() -> {
+        playSoundInMedia(R.raw.tic_tock_click);
+        startActivity(new Intent(GameActivity.this, MenuActivity.class));
+        return null;
+    }, () -> {
+        playSoundInMedia(R.raw.tic_tock_click);
+        return null;
+    });
 
     private Vibrator vibrator;
 
@@ -147,18 +152,6 @@ public class GameActivity extends AppCompatActivity implements MediaPlayer.OnCom
         lastClickTime = SystemClock.elapsedRealtime();
         playSoundInMedia(R.raw.cancel_game_sound);
         quitDialog.show(getSupportFragmentManager(), "quitDialog");
-    }
-
-    private Unit onYesClicked() {
-        playSoundInMedia(R.raw.tic_tock_click);
-        startActivity(new Intent(GameActivity.this, MenuActivity.class));
-        return null;
-    }
-
-    private Unit onNoClicked() {
-        playSoundInMedia(R.raw.tic_tock_click);
-        quitDialog.dismiss();
-        return null;
     }
 
     public void undo(View view) {

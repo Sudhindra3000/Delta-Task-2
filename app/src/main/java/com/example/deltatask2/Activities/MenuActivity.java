@@ -23,8 +23,6 @@ import com.example.deltatask2.R;
 import com.example.deltatask2.databinding.ActivityMenuBinding;
 import com.thekhaeng.pushdownanim.PushDownAnim;
 
-import kotlin.Unit;
-
 public class MenuActivity extends AppCompatActivity implements MediaPlayer.OnCompletionListener {
 
     private ActivityMenuBinding binding;
@@ -61,7 +59,12 @@ public class MenuActivity extends AppCompatActivity implements MediaPlayer.OnCom
         sharedPreferences = MenuActivity.this.getSharedPreferences("pref", MODE_PRIVATE);
         s = sharedPreferences.getInt("s", 6);
 
-        settingsDialog = new SettingsDialog(this::gridSizeSelected, s);
+        settingsDialog = new SettingsDialog((tag) -> {
+            playSoundInMedia(R.raw.tic_tock_click);
+            s = tag;
+            sharedPreferences.edit().putInt("s", s).apply();
+            return null;
+        }, s);
 
         Animation multAnim = AnimationUtils.loadAnimation(this, R.anim.mult_anim_2);
         binding.btMultiPlayer.setAnimation(multAnim);
@@ -84,13 +87,6 @@ public class MenuActivity extends AppCompatActivity implements MediaPlayer.OnCom
         playSoundInMedia(R.raw.menu_click);
         settingsDialog.setS(s);
         settingsDialog.show(getSupportFragmentManager(), "settings");
-    }
-
-    private Unit gridSizeSelected(int tag) {
-        playSoundInMedia(R.raw.tic_tock_click);
-        s = tag;
-        sharedPreferences.edit().putInt("s", s).apply();
-        return null;
     }
 
     public void openNOPDialog(View view) {
