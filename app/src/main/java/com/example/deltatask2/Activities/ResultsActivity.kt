@@ -1,112 +1,105 @@
-package com.example.deltatask2.Activities;
+package com.example.deltatask2.Activities
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
+import android.content.Context
+import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Color
+import android.media.MediaPlayer
+import android.media.MediaPlayer.OnCompletionListener
+import android.os.Bundle
+import android.view.View
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import com.example.deltatask2.R
+import com.example.deltatask2.Utils.Result
+import com.example.deltatask2.databinding.ActivityResultsBinding
+import java.util.*
 
-import android.content.Context;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.media.MediaPlayer;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
+class ResultsActivity : AppCompatActivity(), OnCompletionListener {
 
-import com.example.deltatask2.R;
-import com.example.deltatask2.Utils.Result;
-import com.example.deltatask2.databinding.ActivityResultsBinding;
+    private lateinit var binding: ActivityResultsBinding
+    private lateinit var imageViews: ArrayList<ImageView>
+    private lateinit var tvScores: ArrayList<TextView>
 
-import java.util.ArrayList;
-
-public class ResultsActivity extends AppCompatActivity implements MediaPlayer.OnCompletionListener {
-
-    private ActivityResultsBinding binding;
-    private ArrayList<ImageView> imageViews;
-    private ArrayList<TextView> tvScores;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        binding = ActivityResultsBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
-
-        View decorView = getWindow().getDecorView();
-        decorView.setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_IMMERSIVE
-                        | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-                        | View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR);
-
-        int n = getIntent().getIntExtra("n", 0);
-        ArrayList<Result> results = getIntent().getParcelableArrayListExtra("sortedResults");
-
-        setupLists();
-
-        for (int i = 0; i < n; i++) {
-            imageViews.get(i).setVisibility(View.VISIBLE);
-            tvScores.get(i).setVisibility(View.VISIBLE);
-            imageViews.get(i).setImageBitmap(getBitmapFromVectorDrawable(this, results.get(i).getImageId()));
-            tvScores.get(i).setTextColor(Color.parseColor(results.get(i).getColor()));
-            tvScores.get(i).setText(String.valueOf(results.get(i).getScore()));
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = ActivityResultsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        val decorView = window.decorView
+        decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_IMMERSIVE
+            or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+            or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+            or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+            or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+            or View.SYSTEM_UI_FLAG_FULLSCREEN
+            or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+            or View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR)
+        val n = intent.getIntExtra("n", 0)
+        val results = intent.getParcelableArrayListExtra<Result>("sortedResults") ?: arrayListOf()
+        setupLists()
+        for (i in 0 until n) {
+            imageViews[i].visibility = View.VISIBLE
+            tvScores[i].visibility = View.VISIBLE
+            imageViews[i].setImageBitmap(getBitmapFromVectorDrawable(this, results[i].imageId))
+            tvScores[i].setTextColor(Color.parseColor(results[i].color))
+            tvScores[i].text = results[i].score.toString()
         }
     }
 
-    private void setupLists() {
-        imageViews = new ArrayList<>();
-        imageViews.add(binding.iv1);
-        imageViews.add(binding.iv2);
-        imageViews.add(binding.iv3);
-        imageViews.add(binding.iv4);
-        imageViews.add(binding.iv5);
-        imageViews.add(binding.iv6);
-        tvScores = new ArrayList<>();
-        tvScores.add(binding.ts1);
-        tvScores.add(binding.ts2);
-        tvScores.add(binding.ts3);
-        tvScores.add(binding.ts4);
-        tvScores.add(binding.ts5);
-        tvScores.add(binding.ts6);
+    private fun setupLists() {
+        imageViews = ArrayList()
+        imageViews.add(binding.iv1)
+        imageViews.add(binding.iv2)
+        imageViews.add(binding.iv3)
+        imageViews.add(binding.iv4)
+        imageViews.add(binding.iv5)
+        imageViews.add(binding.iv6)
+        tvScores = ArrayList()
+        tvScores.add(binding.ts1)
+        tvScores.add(binding.ts2)
+        tvScores.add(binding.ts3)
+        tvScores.add(binding.ts4)
+        tvScores.add(binding.ts5)
+        tvScores.add(binding.ts6)
     }
 
-    public static Bitmap getBitmapFromVectorDrawable(Context context, int drawableId) {
-        Drawable drawable = ContextCompat.getDrawable(context, drawableId);
-        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(),
-                drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-        drawable.draw(canvas);
-
-        return bitmap;
+    fun showMainMenu(view: View?) {
+        playSoundInMedia()
+        startActivity(Intent(this@ResultsActivity, MenuActivity::class.java))
     }
 
-    public void showMainMenu(View view) {
-        playSoundInMedia();
-        startActivity(new Intent(ResultsActivity.this, MenuActivity.class));
+    private fun playSoundInMedia() {
+        val mediaPlayer = MediaPlayer.create(this@ResultsActivity, R.raw.bt_click_1)
+        mediaPlayer.start()
+        mediaPlayer.setOnCompletionListener(this)
     }
 
-    private void playSoundInMedia() {
-        MediaPlayer mediaPlayer = MediaPlayer.create(ResultsActivity.this, R.raw.bt_click_1);
-        mediaPlayer.start();
-        mediaPlayer.setOnCompletionListener(this);
-    }
-
-    @Override
-    public void onCompletion(MediaPlayer mp) {
+    override fun onCompletion(mp: MediaPlayer) {
+        var mp: MediaPlayer? = mp
         if (mp != null) {
-            mp.release();
-            mp = null;
+            mp.release()
+            mp = null
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        startActivity(new Intent(ResultsActivity.this, MenuActivity.class));
+    override fun onBackPressed() {
+        startActivity(Intent(this@ResultsActivity, MenuActivity::class.java))
+    }
+
+    companion object {
+        fun getBitmapFromVectorDrawable(context: Context?, drawableId: Int): Bitmap {
+            val drawable = ContextCompat.getDrawable(context!!, drawableId)
+            val bitmap = Bitmap.createBitmap(
+                drawable!!.intrinsicWidth,
+                drawable.intrinsicHeight, Bitmap.Config.ARGB_8888
+            )
+            val canvas = Canvas(bitmap)
+            drawable.setBounds(0, 0, canvas.width, canvas.height)
+            drawable.draw(canvas)
+            return bitmap
+        }
     }
 }
