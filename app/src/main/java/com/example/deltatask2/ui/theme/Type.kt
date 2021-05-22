@@ -13,9 +13,10 @@ private val bangers = Font(R.font.bangers)
 private val bangersFontFamily = FontFamily(bangers)
 
 val Typography = Typography(
+    defaultFontFamily = bangersFontFamily,
     body1 = TextStyle(
-        fontFamily = bangersFontFamily,
         fontWeight = FontWeight.Normal,
-        fontSize = 16.sp
+        fontSize = 16.sp,
+        color = LightGrey
     )
 )

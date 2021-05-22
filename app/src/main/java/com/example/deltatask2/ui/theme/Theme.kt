@@ -8,7 +8,7 @@ private val LightColorPalette = lightColors(
     primary = Primary,
     primaryVariant = Primary,
     secondary = Secondary,
-    background = Background
+    background = BackgroundLight
 )
 
 @Composable
