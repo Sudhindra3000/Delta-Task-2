@@ -61,7 +61,7 @@ public class MenuActivity extends AppCompatActivity implements MediaPlayer.OnCom
         sharedPreferences = MenuActivity.this.getSharedPreferences("pref", MODE_PRIVATE);
         s = sharedPreferences.getInt("s", 6);
 
-        settingsDialog = new SettingsDialog(this::gridSizeSelected);
+        settingsDialog = new SettingsDialog(this::gridSizeSelected, s);
 
         Animation multAnim = AnimationUtils.loadAnimation(this, R.anim.mult_anim_2);
         binding.btMultiPlayer.setAnimation(multAnim);

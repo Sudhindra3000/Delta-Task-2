@@ -6,75 +6,88 @@ import android.content.DialogInterface
 import android.os.Build
 import android.os.Bundle
 import android.view.View
-import android.widget.Button
-import android.widget.ImageView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatDialogFragment
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.Text
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.deltatask2.R
-import com.example.deltatask2.databinding.SettingsDialogBinding
-import com.thekhaeng.pushdownanim.PushDownAnim
-import java.util.*
+import com.example.deltatask2.ui.components.SizeSelection
+import com.example.deltatask2.ui.theme.MarioRed
+import com.example.deltatask2.ui.utils.WithTheme
+import com.example.deltatask2.ui.utils.clickableWithoutRipple
 
-class SettingsDialog(private val gridSizeSelected: (Int) -> Unit) : AppCompatDialogFragment() {
+class SettingsDialog(private val gridSizeSelected: (Int) -> Unit, var s: Int) :
+    AppCompatDialogFragment() {
 
-    private var binding: SettingsDialogBinding? = null
-    private var buttons: ArrayList<Button>? = null
-    private var borders: ArrayList<ImageView>? = null
-    private var s = 0
-
-    fun setS(s: Int) {
-        this.s = s
-    }
-
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = AlertDialog.Builder(activity, R.style.SettingsDialog)
-        binding = SettingsDialogBinding.inflate(requireActivity().layoutInflater)
-        builder.setView(binding!!.root)
-        binding!!.btBack.setOnClickListener { v: View? -> dismiss() }
-        PushDownAnim.setPushDownAnimTo(binding!!.btBack)
-            .setScale(PushDownAnim.MODE_STATIC_DP, PushDownAnim.DEFAULT_PUSH_STATIC)
-        buttons = ArrayList()
-        initButtons()
-        for (button in buttons!!) {
-            button.setOnClickListener { v: View ->
-                gridSizeSelected(v.tag.toString().toInt())
-                showBorder(v.tag.toString().toInt())
-            }
-        }
-        borders = ArrayList()
-        initBorders()
-        showBorder(s)
-        return builder.create()
-    }
-
-    private fun initButtons() {
-        buttons!!.add(binding!!.g3)
-        buttons!!.add(binding!!.g4)
-        buttons!!.add(binding!!.g5)
-        buttons!!.add(binding!!.g6)
-        buttons!!.add(binding!!.g7)
-        buttons!!.add(binding!!.g8)
-        buttons!!.add(binding!!.g9)
-        buttons!!.add(binding!!.g10)
-    }
-
-    private fun initBorders() {
-        borders!!.add(binding!!.gsB3)
-        borders!!.add(binding!!.gsB4)
-        borders!!.add(binding!!.gsB5)
-        borders!!.add(binding!!.gsB6)
-        borders!!.add(binding!!.gsB7)
-        borders!!.add(binding!!.gsB8)
-        borders!!.add(binding!!.gsB9)
-        borders!!.add(binding!!.gsB10)
-    }
-
-    private fun showBorder(tag: Int) {
-        for (imageView in borders!!) {
-            imageView.visibility = View.INVISIBLE
-        }
-        borders!![tag - 3].visibility = View.VISIBLE
-    }
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
+        AlertDialog.Builder(requireContext(), R.style.SettingsDialog)
+            .apply {
+                setView(ComposeView(requireContext()).apply {
+                    setContent {
+                        var selectedSize by remember { mutableStateOf(s) }
+                        WithTheme {
+                            Column(
+                                verticalArrangement = Arrangement.spacedBy(20.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Box(
+                                    Modifier
+                                        .background(MarioRed)
+                                        .fillMaxWidth()
+                                        .height(66.dp)
+                                ) {
+                                    Image(
+                                        modifier = Modifier.align(Alignment.Center),
+                                        painter = painterResource(id = R.drawable.settings),
+                                        contentDescription = "Settings"
+                                    )
+                                    Image(
+                                        modifier = Modifier
+                                            .size(60.dp)
+                                            .align(Alignment.CenterStart)
+                                            .clickableWithoutRipple(::dismiss),
+                                        painter = painterResource(id = R.drawable.ic_settings_back),
+                                        contentDescription = "Back"
+                                    )
+                                }
+                                Text(
+                                    text = "GRID SIZE",
+                                    fontSize = 38.sp,
+                                    color = MarioRed
+                                )
+                                SizeSelection(
+                                    Modifier
+                                        .padding(horizontal = 10.dp)
+                                        .padding(bottom = 20.dp),
+                                    value = selectedSize,
+                                    onValueChange = {
+                                        selectedSize = it
+                                        gridSizeSelected(selectedSize)
+                                    }
+                                )
+                            }
+                        }
+                    }
+                })
+            }.create()
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     override fun onDismiss(dialog: DialogInterface) {
