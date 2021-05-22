@@ -1,4 +1,4 @@
-package com.example.deltatask2.customViews;
+package com.example.deltatask2.CustomViews;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -11,9 +11,9 @@ import android.view.View;
 
 import androidx.annotation.Nullable;
 
-import com.example.deltatask2.utils.Line;
-import com.example.deltatask2.utils.Point;
-import com.example.deltatask2.utils.Square;
+import com.example.deltatask2.Utils.Line;
+import com.example.deltatask2.Utils.Point;
+import com.example.deltatask2.Utils.Square;
 
 import java.util.ArrayList;
 

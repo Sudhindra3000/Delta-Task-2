@@ -1,4 +1,4 @@
-package com.example.deltatask2.activities;
+package com.example.deltatask2.Activities;
 
 import static com.thekhaeng.pushdownanim.PushDownAnim.MODE_STATIC_DP;
 
@@ -17,8 +17,8 @@ import android.view.animation.AnimationUtils;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.deltatask2.dialogs.NumOfPlayersDialog;
-import com.example.deltatask2.dialogs.SettingsDialog;
+import com.example.deltatask2.Dialogs.NumOfPlayersDialog;
+import com.example.deltatask2.Dialogs.SettingsDialog;
 import com.example.deltatask2.R;
 import com.example.deltatask2.databinding.ActivityMenuBinding;
 import com.thekhaeng.pushdownanim.PushDownAnim;

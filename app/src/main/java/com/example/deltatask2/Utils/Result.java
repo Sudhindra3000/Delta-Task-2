@@ -1,4 +1,4 @@
-package com.example.deltatask2.utils;
+package com.example.deltatask2.Utils;
 
 import android.os.Parcel;
 import android.os.Parcelable;

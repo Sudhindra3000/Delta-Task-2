@@ -1,4 +1,4 @@
-package com.example.deltatask2.activities;
+package com.example.deltatask2.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -16,7 +16,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.deltatask2.R;
-import com.example.deltatask2.utils.Result;
+import com.example.deltatask2.Utils.Result;
 import com.example.deltatask2.databinding.ActivityResultsBinding;
 
 import java.util.ArrayList;

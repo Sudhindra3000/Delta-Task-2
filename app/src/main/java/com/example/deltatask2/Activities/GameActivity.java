@@ -1,4 +1,4 @@
-package com.example.deltatask2.activities;
+package com.example.deltatask2.Activities;
 
 import static com.thekhaeng.pushdownanim.PushDownAnim.MODE_STATIC_DP;
 
@@ -24,11 +24,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 
-import com.example.deltatask2.customViews.GameCanvas;
-import com.example.deltatask2.dialogs.QuitDialog;
+import com.example.deltatask2.CustomViews.GameCanvas;
+import com.example.deltatask2.Dialogs.QuitDialog;
 import com.example.deltatask2.R;
-import com.example.deltatask2.utils.Result;
-import com.example.deltatask2.utils.SortResultsByScore;
+import com.example.deltatask2.Utils.Result;
+import com.example.deltatask2.Utils.SortResultsByScore;
 import com.example.deltatask2.databinding.ActivityGameBinding;
 import com.thekhaeng.pushdownanim.PushDownAnim;
 

@@ -1,4 +1,4 @@
-package com.example.deltatask2.activities
+package com.example.deltatask2.Activities
 
 import android.os.Bundle
 import androidx.activity.compose.setContent

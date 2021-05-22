@@ -1,4 +1,6 @@
-package com.example.deltatask2.utils;
+package com.example.deltatask2.Utils;
+
+import com.example.deltatask2.Utils.Result;
 
 import java.util.Comparator;
 
