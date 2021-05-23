@@ -1,241 +1,201 @@
-package com.example.deltatask2.Activities;
+package com.example.deltatask2.Activities
 
-import static com.thekhaeng.pushdownanim.PushDownAnim.MODE_STATIC_DP;
+import android.content.Context
+import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.media.MediaPlayer
+import android.media.MediaPlayer.OnCompletionListener
+import android.os.Build
+import android.os.Bundle
+import android.os.SystemClock
+import android.os.VibrationEffect
+import android.os.Vibrator
+import android.view.View
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import com.example.deltatask2.CustomViews.GameCanvas.CanvasListener
+import com.example.deltatask2.Dialogs.QuitDialog
+import com.example.deltatask2.R
+import com.example.deltatask2.Utils.Result
+import com.example.deltatask2.Utils.SortResultsByScore
+import com.example.deltatask2.databinding.ActivityGameBinding
+import com.thekhaeng.pushdownanim.PushDownAnim
+import java.util.*
 
-import android.content.Context;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.media.MediaPlayer;
-import android.os.Build;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.SystemClock;
-import android.os.VibrationEffect;
-import android.os.Vibrator;
-import android.view.Gravity;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
+class GameActivity : AppCompatActivity(), OnCompletionListener {
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.content.ContextCompat;
+    private var binding: ActivityGameBinding? = null
 
-import com.example.deltatask2.CustomViews.GameCanvas;
-import com.example.deltatask2.Dialogs.QuitDialog;
-import com.example.deltatask2.R;
-import com.example.deltatask2.Utils.Result;
-import com.example.deltatask2.Utils.SortResultsByScore;
-import com.example.deltatask2.databinding.ActivityGameBinding;
-import com.thekhaeng.pushdownanim.PushDownAnim;
+    private var n = 0
+    private var currentPlayer = 0
+    private var squareAdded = false
+    private lateinit var scores: IntArray
+    private lateinit var colors: Array<String>
+    private var playerBitmaps: ArrayList<Bitmap>? = null
+    private var borderBitmaps: ArrayList<Bitmap>? = null
+    private var results: ArrayList<Result>? = null
 
-import java.util.ArrayList;
-import java.util.Collections;
+    private val quitDialog = QuitDialog({
+        playSoundInMedia(R.raw.tic_tock_click)
+        startActivity(Intent(this@GameActivity, MenuActivity::class.java))
+    }) { playSoundInMedia(R.raw.tic_tock_click) }
 
-public class GameActivity extends AppCompatActivity implements MediaPlayer.OnCompletionListener {
-
-    private ActivityGameBinding binding;
-
-    private int n;
-    private int currentPlayer = 0;
-    private boolean squareAdded = false;
-    private int[] scores;
-    private String[] colors;
-    private ArrayList<Bitmap> playerBitmaps, borderBitmaps;
-    private ArrayList<Result> results;
-
-    private final QuitDialog quitDialog = new QuitDialog(() -> {
-        playSoundInMedia(R.raw.tic_tock_click);
-        startActivity(new Intent(GameActivity.this, MenuActivity.class));
-        return null;
-    }, () -> {
-        playSoundInMedia(R.raw.tic_tock_click);
-        return null;
-    });
-
-    private Vibrator vibrator;
-
-    private long lastClickTime = 0;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        binding = ActivityGameBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
-
-        View decorView = getWindow().getDecorView();
-        decorView.setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_IMMERSIVE
-                        | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-                        | View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR);
-
-
-        PushDownAnim.setPushDownAnimTo(binding.btCancel).setScale(MODE_STATIC_DP, PushDownAnim.DEFAULT_PUSH_STATIC);
-        PushDownAnim.setPushDownAnimTo(binding.btUndo).setScale(MODE_STATIC_DP, PushDownAnim.DEFAULT_PUSH_STATIC);
-
-        vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-
-        n = getIntent().getIntExtra("n", 2);
-        int s = getIntent().getIntExtra("s", 6);
-
-        setupIcons();
-        colors = getResources().getStringArray(R.array.playerColors);
-        binding.gameCanvas.setGridSize(s);
-        binding.gameCanvas.setPlayers(n, colors);
-        binding.scoreBoard.setPlayers(n, playerBitmaps, borderBitmaps, colors);
-        scores = new int[n];
-        binding.gameCanvas.setListener(new GameCanvas.CanvasListener() {
-            @Override
-            public void onGridEmpty() {
-                binding.btUndo.setVisibility(View.INVISIBLE);
+    private var vibrator: Vibrator? = null
+    private var lastClickTime: Long = 0
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = ActivityGameBinding.inflate(layoutInflater)
+        setContentView(binding!!.root)
+        val decorView = window.decorView
+        decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_IMMERSIVE
+            or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+            or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+            or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+            or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+            or View.SYSTEM_UI_FLAG_FULLSCREEN
+            or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+            or View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR)
+        PushDownAnim.setPushDownAnimTo(binding!!.btCancel)
+            .setScale(PushDownAnim.MODE_STATIC_DP, PushDownAnim.DEFAULT_PUSH_STATIC)
+        PushDownAnim.setPushDownAnimTo(binding!!.btUndo)
+            .setScale(PushDownAnim.MODE_STATIC_DP, PushDownAnim.DEFAULT_PUSH_STATIC)
+        vibrator = getSystemService(VIBRATOR_SERVICE) as Vibrator
+        n = intent.getIntExtra("n", 2)
+        val s = intent.getIntExtra("s", 6)
+        setupIcons()
+        colors = resources.getStringArray(R.array.playerColors)
+        binding!!.gameCanvas.setGridSize(s)
+        binding!!.gameCanvas.setPlayers(n, colors)
+        binding!!.scoreBoard.setPlayers(n, playerBitmaps, borderBitmaps, colors)
+        scores = IntArray(n)
+        binding!!.gameCanvas.setListener(object : CanvasListener {
+            override fun onGridEmpty() {
+                binding!!.btUndo.visibility = View.INVISIBLE
             }
 
-            @Override
-            public void onPlayerChanged(int index) {
-                playSoundInMedia(R.raw.wet_click);
-                currentPlayer = index;
-                binding.scoreBoard.setCurrentPlayer(index);
-                squareAdded = false;
-                binding.btUndo.setVisibility(View.VISIBLE);
+            override fun onPlayerChanged(index: Int) {
+                playSoundInMedia(R.raw.wet_click)
+                currentPlayer = index
+                binding!!.scoreBoard.setCurrentPlayer(index)
+                squareAdded = false
+                binding!!.btUndo.visibility = View.VISIBLE
             }
 
-            @Override
-            public void onSquareAdded(int player) {
-                currentPlayer = player;
-                scores[player]++;
-                binding.scoreBoard.setScores(scores);
-                squareAdded = true;
-                binding.btUndo.setVisibility(View.VISIBLE);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-                    vibrator.vibrate(VibrationEffect.createOneShot(200, VibrationEffect.DEFAULT_AMPLITUDE));
-                else
-                    vibrator.vibrate(200);
-
+            override fun onSquareAdded(player: Int) {
+                currentPlayer = player
+                scores[player]++
+                binding!!.scoreBoard.setScores(scores)
+                squareAdded = true
+                binding!!.btUndo.visibility = View.VISIBLE
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) vibrator!!.vibrate(
+                    VibrationEffect.createOneShot(200, VibrationEffect.DEFAULT_AMPLITUDE)
+                ) else vibrator!!.vibrate(200)
             }
 
-            @Override
-            public void onGridCompleted() {
-                binding.btUndo.setVisibility(View.INVISIBLE);
-                binding.btCancel.setVisibility(View.INVISIBLE);
-                showResults();
+            override fun onGridCompleted() {
+                binding!!.btUndo.visibility = View.INVISIBLE
+                binding!!.btCancel.visibility = View.INVISIBLE
+                showResults()
             }
-        });
+        })
     }
 
-    private void setupIcons() {
-        playerBitmaps = new ArrayList<>();
-        playerBitmaps.add(getBitmapFromVectorDrawable(this, R.drawable.player1));
-        playerBitmaps.add(getBitmapFromVectorDrawable(this, R.drawable.player2));
-        playerBitmaps.add(getBitmapFromVectorDrawable(this, R.drawable.player3));
-        playerBitmaps.add(getBitmapFromVectorDrawable(this, R.drawable.player4));
-        playerBitmaps.add(getBitmapFromVectorDrawable(this, R.drawable.player5));
-        playerBitmaps.add(getBitmapFromVectorDrawable(this, R.drawable.player6));
-        borderBitmaps = new ArrayList<>();
-        borderBitmaps.add(getBitmapFromVectorDrawable(this, R.drawable.border1));
-        borderBitmaps.add(getBitmapFromVectorDrawable(this, R.drawable.border2));
-        borderBitmaps.add(getBitmapFromVectorDrawable(this, R.drawable.border3));
-        borderBitmaps.add(getBitmapFromVectorDrawable(this, R.drawable.border4));
-        borderBitmaps.add(getBitmapFromVectorDrawable(this, R.drawable.border5));
-        borderBitmaps.add(getBitmapFromVectorDrawable(this, R.drawable.border6));
+    private fun setupIcons() {
+        playerBitmaps = ArrayList()
+        playerBitmaps!!.add(getBitmapFromVectorDrawable(this, R.drawable.player1))
+        playerBitmaps!!.add(getBitmapFromVectorDrawable(this, R.drawable.player2))
+        playerBitmaps!!.add(getBitmapFromVectorDrawable(this, R.drawable.player3))
+        playerBitmaps!!.add(getBitmapFromVectorDrawable(this, R.drawable.player4))
+        playerBitmaps!!.add(getBitmapFromVectorDrawable(this, R.drawable.player5))
+        playerBitmaps!!.add(getBitmapFromVectorDrawable(this, R.drawable.player6))
+        borderBitmaps = ArrayList()
+        borderBitmaps!!.add(getBitmapFromVectorDrawable(this, R.drawable.border1))
+        borderBitmaps!!.add(getBitmapFromVectorDrawable(this, R.drawable.border2))
+        borderBitmaps!!.add(getBitmapFromVectorDrawable(this, R.drawable.border3))
+        borderBitmaps!!.add(getBitmapFromVectorDrawable(this, R.drawable.border4))
+        borderBitmaps!!.add(getBitmapFromVectorDrawable(this, R.drawable.border5))
+        borderBitmaps!!.add(getBitmapFromVectorDrawable(this, R.drawable.border6))
     }
 
-    public void cancel(View view) {
-        if (SystemClock.elapsedRealtime() - lastClickTime < 400) return;
-        lastClickTime = SystemClock.elapsedRealtime();
-        playSoundInMedia(R.raw.cancel_game_sound);
-        quitDialog.show(getSupportFragmentManager(), "quitDialog");
+    fun cancel(view: View?) {
+        if (SystemClock.elapsedRealtime() - lastClickTime < 400) return
+        lastClickTime = SystemClock.elapsedRealtime()
+        playSoundInMedia(R.raw.cancel_game_sound)
+        quitDialog.show(supportFragmentManager, "quitDialog")
     }
 
-    public void undo(View view) {
-        if (SystemClock.elapsedRealtime() - lastClickTime < 300)
-            return;
-        lastClickTime = SystemClock.elapsedRealtime();
-        playSoundInMedia(R.raw.bt_click_1);
-        ArrayList<Integer> decreasingIndices = binding.gameCanvas.undo2();
-        for (Integer integer : decreasingIndices) {
-            scores[integer]--;
+    fun undo(view: View?) {
+        if (SystemClock.elapsedRealtime() - lastClickTime < 300) return
+        lastClickTime = SystemClock.elapsedRealtime()
+        playSoundInMedia(R.raw.bt_click_1)
+        val decreasingIndices = binding!!.gameCanvas.undo2()
+        for (integer in decreasingIndices) {
+            scores[integer!!]--
         }
-        binding.scoreBoard.setScores(scores);
-        if (squareAdded)
-            if (binding.gameCanvas.getCurrentPlayer() == 0)
-                binding.scoreBoard.setCurrentPlayer(n - 1);
-            else
-                binding.scoreBoard.setCurrentPlayer(binding.gameCanvas.getCurrentPlayer() - 1);
-        else
-            binding.scoreBoard.setCurrentPlayer(binding.gameCanvas.getCurrentPlayer());
+        binding!!.scoreBoard.setScores(scores)
+        if (squareAdded) if (binding!!.gameCanvas.currentPlayer == 0) binding!!.scoreBoard.setCurrentPlayer(
+            n - 1
+        ) else binding!!.scoreBoard.setCurrentPlayer(
+            binding!!.gameCanvas.currentPlayer - 1
+        ) else binding!!.scoreBoard.setCurrentPlayer(
+            binding!!.gameCanvas.currentPlayer
+        )
     }
 
-    public static Bitmap getBitmapFromVectorDrawable(Context context, int drawableId) {
-        Drawable drawable = ContextCompat.getDrawable(context, drawableId);
-        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(),
-                drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-        drawable.draw(canvas);
-
-        return bitmap;
+    private fun showResults() {
+        playSoundInMedia(R.raw.applause)
+        results = ArrayList()
+        setupImageId()
+        for (i in 0 until n) results!![i].setScoreAndColor(scores[i], colors[i])
+        // TODO: 5/23/2021 Show Toast with Toast Library
+        Toast.makeText(this, "Game Over", Toast.LENGTH_SHORT).show()
+        val intent = Intent(this@GameActivity, ResultsActivity::class.java)
+        Collections.sort(results, SortResultsByScore())
+        intent.putExtra("n", n)
+        intent.putExtra("sortedResults", results)
+        startActivity(intent)
     }
 
-    public void showGameOverToast(String color) {
-        View toastLayout = getLayoutInflater().inflate(R.layout.go_toast_layout, (ViewGroup) findViewById(R.id.goToastRoot));
-        ConstraintLayout constraintLayout = toastLayout.findViewById(R.id.toastBack);
-        constraintLayout.setBackgroundColor(Color.parseColor(color));
-        Toast toast = new Toast(getApplicationContext());
-        toast.setGravity(Gravity.CENTER, 0, 0);
-        toast.setDuration(Toast.LENGTH_SHORT);
-        toast.setView(toastLayout);
-        toast.show();
+    private fun setupImageId() {
+        results!!.add(Result(R.drawable.player1))
+        results!!.add(Result(R.drawable.player2))
+        results!!.add(Result(R.drawable.player3))
+        results!!.add(Result(R.drawable.player4))
+        results!!.add(Result(R.drawable.player5))
+        results!!.add(Result(R.drawable.player6))
     }
 
-    private void showResults() {
-        playSoundInMedia(R.raw.applause);
-        results = new ArrayList<>();
-        setupImageId();
-        for (int i = 0; i < n; i++)
-            results.get(i).setScoreAndColor(scores[i], colors[i]);
-        showGameOverToast(colors[currentPlayer]);
-        new Handler().postDelayed(() -> {
-            Intent intent = new Intent(GameActivity.this, ResultsActivity.class);
-            Collections.sort(results, new SortResultsByScore());
-            intent.putExtra("n", n);
-            intent.putExtra("sortedResults", results);
-            startActivity(intent);
-        }, 2000);
+    private fun playSoundInMedia(resID: Int) {
+        val mediaPlayer = MediaPlayer.create(this@GameActivity, resID)
+        mediaPlayer.start()
+        mediaPlayer.setOnCompletionListener(this)
     }
 
-    private void setupImageId() {
-        results.add(new Result(R.drawable.player1));
-        results.add(new Result(R.drawable.player2));
-        results.add(new Result(R.drawable.player3));
-        results.add(new Result(R.drawable.player4));
-        results.add(new Result(R.drawable.player5));
-        results.add(new Result(R.drawable.player6));
-    }
-
-    private void playSoundInMedia(int resID) {
-        MediaPlayer mediaPlayer = MediaPlayer.create(GameActivity.this, resID);
-        mediaPlayer.start();
-        mediaPlayer.setOnCompletionListener(this);
-    }
-
-    @Override
-    public void onCompletion(MediaPlayer mp) {
+    override fun onCompletion(mp: MediaPlayer) {
+        var mp: MediaPlayer? = mp
         if (mp != null) {
-            mp.release();
-            mp = null;
+            mp.release()
+            mp = null
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        cancel(binding.btCancel);
+    override fun onBackPressed() {
+        cancel(binding!!.btCancel)
+    }
+
+    companion object {
+        fun getBitmapFromVectorDrawable(context: Context?, drawableId: Int): Bitmap {
+            val drawable = ContextCompat.getDrawable(context!!, drawableId)
+            val bitmap = Bitmap.createBitmap(
+                drawable!!.intrinsicWidth,
+                drawable.intrinsicHeight, Bitmap.Config.ARGB_8888
+            )
+            val canvas = Canvas(bitmap)
+            drawable.setBounds(0, 0, canvas.width, canvas.height)
+            drawable.draw(canvas)
+            return bitmap
+        }
     }
 }
