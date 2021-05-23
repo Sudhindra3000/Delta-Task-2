@@ -25,7 +25,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.deltatask2.R
-import com.example.deltatask2.ui.components.DialogButton
+import com.example.deltatask2.ui.components.BigButton
 import com.example.deltatask2.ui.theme.LuigiGreen
 import com.example.deltatask2.ui.utils.WithTheme
 
@@ -56,8 +56,8 @@ class QuitDialog(
                             Modifier.fillMaxWidth(0.8f),
                             horizontalArrangement = Arrangement.SpaceEvenly
                         ) {
-                            DialogButton(text = "Yes", onClick = onYesClicked)
-                            DialogButton(text = "No", onClick = {
+                            BigButton(text = "Yes", onClick = onYesClicked)
+                            BigButton(text = "No", onClick = {
                                 onNoClicked()
                                 dismiss()
                             })

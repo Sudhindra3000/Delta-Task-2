@@ -12,7 +12,7 @@ import androidx.compose.ui.unit.sp
 import com.example.deltatask2.ui.theme.MarioRed
 
 @Composable
-fun DialogButton(
+fun BigButton(
     modifier: Modifier = Modifier,
     text: String,
     onClick: () -> Unit
