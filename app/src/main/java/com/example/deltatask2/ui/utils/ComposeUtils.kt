@@ -7,7 +7,9 @@ import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.debugInspectorInfo
+import androidx.core.graphics.toColorInt
 import com.example.deltatask2.ui.theme.DotsAndBoxesTheme
 
 @Composable
@@ -36,3 +38,8 @@ fun Modifier.clickableWithoutRipple(
         onClick = onClick
     )
 }
+
+/**
+ * Returns a androidx.compose.ui.graphics.Color from a String of Hex Code
+ */
+fun String.toColor() = Color(toColorInt())
