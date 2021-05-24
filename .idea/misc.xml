@@ -3,9 +3,11 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Sudip/AndroidStudioCanaryProjects/Delta-App-Dev-Task-2/app/src/main/res/drawable/border1.xml" value="0.38125" />
         <entry key="..\:/Users/Sudip/AndroidStudioCanaryProjects/Delta-App-Dev-Task-2/app/src/main/res/drawable/cancel_icon.xml" value="0.38125" />
         <entry key="..\:/Users/Sudip/AndroidStudioCanaryProjects/Delta-App-Dev-Task-2/app/src/main/res/drawable/gs_border.xml" value="0.38125" />
         <entry key="..\:/Users/Sudip/AndroidStudioCanaryProjects/Delta-App-Dev-Task-2/app/src/main/res/drawable/ic_settings_back.xml" value="0.38125" />
+        <entry key="..\:/Users/Sudip/AndroidStudioCanaryProjects/Delta-App-Dev-Task-2/app/src/main/res/layout/activity_game.xml" value="0.3651041666666667" />
         <entry key="..\:/Users/Sudip/AndroidStudioCanaryProjects/Delta-App-Dev-Task-2/app/src/main/res/layout/activity_help.xml" value="0.3651041666666667" />
         <entry key="..\:/Users/Sudip/AndroidStudioCanaryProjects/Delta-App-Dev-Task-2/app/src/main/res/layout/activity_results.xml" value="0.3651041666666667" />
         <entry key="..\:/Users/Sudip/AndroidStudioCanaryProjects/Delta-App-Dev-Task-2/app/src/main/res/layout/quit_dialog.xml" value="0.3651041666666667" />
