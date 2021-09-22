@@ -1,5 +1,7 @@
 package com.example.deltatask2.Activities;
 
+import static com.thekhaeng.pushdownanim.PushDownAnim.MODE_STATIC_DP;
+
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -33,8 +35,6 @@ import com.thekhaeng.pushdownanim.PushDownAnim;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import static com.thekhaeng.pushdownanim.PushDownAnim.MODE_STATIC_DP;
-
 public class GameActivity extends AppCompatActivity implements MediaPlayer.OnCompletionListener {
 
     private ActivityGameBinding binding;
@@ -46,6 +46,15 @@ public class GameActivity extends AppCompatActivity implements MediaPlayer.OnCom
     private String[] colors;
     private ArrayList<Bitmap> playerBitmaps, borderBitmaps;
     private ArrayList<Result> results;
+
+    private final QuitDialog quitDialog = new QuitDialog(() -> {
+        playSoundInMedia(R.raw.tic_tock_click);
+        startActivity(new Intent(GameActivity.this, MenuActivity.class));
+        return null;
+    }, () -> {
+        playSoundInMedia(R.raw.tic_tock_click);
+        return null;
+    });
 
     private Vibrator vibrator;
 
@@ -139,24 +148,9 @@ public class GameActivity extends AppCompatActivity implements MediaPlayer.OnCom
     }
 
     public void cancel(View view) {
-        if (SystemClock.elapsedRealtime() - lastClickTime < 400)
-            return;
+        if (SystemClock.elapsedRealtime() - lastClickTime < 400) return;
         lastClickTime = SystemClock.elapsedRealtime();
-        final QuitDialog quitDialog = new QuitDialog();
         playSoundInMedia(R.raw.cancel_game_sound);
-        quitDialog.setListener(new QuitDialog.quitDialogListener() {
-            @Override
-            public void onYesClicked() {
-                playSoundInMedia(R.raw.tic_tock_click);
-                startActivity(new Intent(GameActivity.this, MenuActivity.class));
-            }
-
-            @Override
-            public void onNoClicked() {
-                playSoundInMedia(R.raw.tic_tock_click);
-                quitDialog.dismiss();
-            }
-        });
         quitDialog.show(getSupportFragmentManager(), "quitDialog");
     }
 

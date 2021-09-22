@@ -1,7 +1,6 @@
 package com.example.deltatask2.Activities;
 
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
+import static com.thekhaeng.pushdownanim.PushDownAnim.MODE_STATIC_DP;
 
 import android.animation.Animator;
 import android.content.Intent;
@@ -15,13 +14,14 @@ import android.view.ViewAnimationUtils;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.deltatask2.Dialogs.NumOfPlayersDialog;
 import com.example.deltatask2.Dialogs.SettingsDialog;
 import com.example.deltatask2.R;
 import com.example.deltatask2.databinding.ActivityMenuBinding;
 import com.thekhaeng.pushdownanim.PushDownAnim;
-
-import static com.thekhaeng.pushdownanim.PushDownAnim.MODE_STATIC_DP;
 
 public class MenuActivity extends AppCompatActivity implements MediaPlayer.OnCompletionListener {
 
@@ -59,7 +59,12 @@ public class MenuActivity extends AppCompatActivity implements MediaPlayer.OnCom
         sharedPreferences = MenuActivity.this.getSharedPreferences("pref", MODE_PRIVATE);
         s = sharedPreferences.getInt("s", 6);
 
-        settingsDialog = new SettingsDialog();
+        settingsDialog = new SettingsDialog((tag) -> {
+            playSoundInMedia(R.raw.tic_tock_click);
+            s = tag;
+            sharedPreferences.edit().putInt("s", s).apply();
+            return null;
+        }, s);
 
         Animation multAnim = AnimationUtils.loadAnimation(this, R.anim.mult_anim_2);
         binding.btMultiPlayer.setAnimation(multAnim);
@@ -81,11 +86,6 @@ public class MenuActivity extends AppCompatActivity implements MediaPlayer.OnCom
         lastClickTime = SystemClock.elapsedRealtime();
         playSoundInMedia(R.raw.menu_click);
         settingsDialog.setS(s);
-        settingsDialog.setListener(tag -> {
-            playSoundInMedia(R.raw.tic_tock_click);
-            s = tag;
-            sharedPreferences.edit().putInt("s", s).apply();
-        });
         settingsDialog.show(getSupportFragmentManager(), "settings");
     }
 
